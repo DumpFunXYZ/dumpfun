@@ -11,7 +11,17 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      scale: {
+        '95': '0.95',
+        '105': '1.05',
+      }
+    }
+  },
+  variants: {
+    extend: {
+      scale: ['active', 'group-hover'],
+    }
   },
   plugins: [require('daisyui')],
 };

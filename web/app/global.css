@@ -7,6 +7,37 @@ body {
   height: 100%;
 }
 
+ @font-face {
+  font-family: an-semibold;
+  src: url('./fonts/AvenirNext-DemiBold.ttf');
+}
+@font-face {
+  font-family: an-regular;
+  src: url('./fonts/AvenirNext-Regular.ttf');
+}
+@font-face {
+  font-family: an-medium;
+  src: url('./fonts/AvenirNext-Medium.ttf');
+}
+@font-face {
+  font-family: an-bold;
+  src: url('./fonts/AvenirNext-Bold.ttf');
+  font-weight: bold;
+} 
+
+.bold {
+  font-family: an-bold;
+}
+.semiBold {
+  font-family: an-semibold;
+}
+.regular {
+  font-family: an-regular;
+}
+.medium {
+  font-family: an-medium;
+}
+
 .wallet-adapter-button-trigger {
   background: rgb(100, 26, 230) !important;
   border-radius: 8px !important;
@@ -16,4 +47,58 @@ body {
 .wallet-adapter-dropdown-list,
 .wallet-adapter-button {
   font-family: inherit !important;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.press-effect {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.press-effect:active {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transform: translateY(2px);
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 0.5s ease-out forwards;
 }

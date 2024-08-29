@@ -1,38 +1,22 @@
-'use client';
+'use client'
+import React, { useState } from 'react';
+import BottomButton from './_components/BottomButton';
+import { BottomSheetComponent } from './_components/BottomSheetComponent';
+import NavBar from './_components/NavBar';
 
-import { AppHero } from '../ui/ui-layout';
-
-const links: { label: string; href: string }[] = [
-  { label: 'Solana Docs', href: 'https://docs.solana.com/' },
-  { label: 'Solana Faucet', href: 'https://faucet.solana.com/' },
-  { label: 'Solana Cookbook', href: 'https://solanacookbook.com/' },
-  { label: 'Solana Stack Overflow', href: 'https://solana.stackexchange.com/' },
-  {
-    label: 'Solana Developers GitHub',
-    href: 'https://github.com/solana-developers/',
-  },
-];
-
-export default function DashboardFeature() {
+export default function Dashboard() {
+  const [open,setOpen]=useState(false)
+  const [visible,setVisible]=useState(false);
   return (
-    <div>
-      <AppHero title="gm" subtitle="Say hi to your new Solana dApp." />
-      <div className="max-w-xl mx-auto py-6 sm:px-6 lg:px-8 text-center">
-        <div className="space-y-2">
-          <p>Here are some helpful links to get you started.</p>
-          {links.map((link, index) => (
-            <div key={index}>
-              <a
-                href={link.href}
-                className="link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
-            </div>
-          ))}
-        </div>
+    <div className="w-screen flex items-center w-[100%] justify-center overflow-x-hidden h-screen">
+      <div className="h-full flex relative max-w-md w-[100%] self-center overflow-x-hidden pt-[50px] w-full bg-[#4A767D] flex-col">
+        <NavBar/>
+       {open && <BottomSheetComponent isOpen={open} setIsOpen={setOpen}/>}
+        
+        <BottomButton onClick={()=>{
+           setOpen(true)
+          
+        }}/>
       </div>
     </div>
   );
