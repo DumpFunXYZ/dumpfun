@@ -5,6 +5,7 @@ interface BottomSheet{
     isOpen:boolean,
     setIsOpen:Function
 }
+//https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/6JdcMdhqgCtcP4U9tieRqmKLhPLxRMLC67QfmdXAJBvZ/logo.png
 
 const data=[
     {

@@ -102,3 +102,39 @@ body {
 .animate-slide-in-bottom {
   animation: slideInBottom 0.5s ease-out forwards;
 }
+
+.button-initial {
+  background-color: red;
+  color: white;
+  border-radius: 50px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button-pressed {
+  background-color: green;
+}
+
+.image-memes {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  transition: transform 10s ease-in;
+}
+
+.dropped {
+  transform: translateY(360px); /* Adjust the value based on how far you want the image to drop */
+}
+
+/* Rectangle 2 */
+
+.gradientOne{
+  background: radial-gradient(92.7% 92.7% at 78.37% 7.3%, #99D7E0 0%, #2C4448 97.5%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+}
+
+.gradientTwo{
+  /* Rectangle 1 */
+
+background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
+
+}
