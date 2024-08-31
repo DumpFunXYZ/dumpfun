@@ -6,6 +6,8 @@ import { ReactNode, Suspense, useEffect, useRef } from 'react';
 import settings from '../../app/assets/settings.svg'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+/*@ts-ignore*/
+import { Helmet } from 'react-helmet';
 
 import { AccountChecker } from '../account/account-ui';
 import {
@@ -25,9 +27,10 @@ export function UiLayout({
   const pathname = usePathname();
 
   return (
-    <div className='w-screen flex items-center w-[100%] justify-center bg-[#00191D] h-[100%]'>
+    <div className='w-screen flex items-center w-[100%] overflow-y-hidden  justify-center bg-[#00191D] h-[100%]'>
     <div className="h-full flex max-w-md h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col">
       <div className="">
+      
         <Suspense
           fallback={
             <div className="text-center my-32">

@@ -18,7 +18,7 @@
     "@tailwindcss/typography": "0.5.13",
     "@tanstack/react-query": "5.40.0",
     "@tanstack/react-query-next-experimental": "5.40.0",
-
+    "axios": "^1.7.6",
     "bs58": "5.0.0",
     "buffer": "6.0.3",
     "daisyui": "4.11.1",
@@ -27,10 +27,12 @@
     "next": "14.0.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-helmet": "^6.1.0",
     "react-hot-toast": "2.4.1",
+    "react-particles": "^2.12.2",
     "react-swipeable-bottom-sheet": "^1.1.2",
-    "tslib": "^2.3.0",
     "react-tsparticles": "^2.9.3",
+    "tslib": "^2.3.0",
     "tsparticles": "^2.9.3"
   },
   "devDependencies": {

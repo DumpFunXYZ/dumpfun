@@ -3,6 +3,8 @@ import { UiLayout } from '@/components/ui/ui-layout';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
+import { AccountProvider } from '@/components/context/accountContext';
+import { TransactionProvider } from '@/components/context/transactionContext';
 
 export const metadata = {
   title: 'dump-fun',
@@ -21,11 +23,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+     
       <body>
+        <div className='status-bar'></div>
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
+              <AccountProvider>
+                <TransactionProvider>
               <UiLayout links={links}>{children}</UiLayout>
+              </TransactionProvider>
+              </AccountProvider>
             </SolanaProvider>
           </ClusterProvider>
         </ReactQueryProvider>
