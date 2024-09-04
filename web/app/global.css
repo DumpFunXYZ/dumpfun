@@ -94,15 +94,15 @@ body {
 }
 
 .animate-slide-in-left {
-  animation: slideInLeft 0.5s ease-out forwards;
+  animation: slideInLeft 1.5s ease-out forwards;
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out forwards;
+  animation: slideInRight 1.5s ease-out forwards;
 }
 
 .animate-slide-in-bottom {
-  animation: slideInBottom 0.5s ease-out forwards;
+  animation: slideInBottom 1.5s ease-out forwards;
 }
 
 .button-initial {
@@ -131,6 +131,8 @@ body {
 /* Rectangle 2 */
 
 .gradientOne{
+  border-width: 1px;
+  border-color: #000000;
   background: radial-gradient(92.7% 92.7% at 78.37% 7.3%, #99D7E0 0%, #2C4448 97.5%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
 }
 

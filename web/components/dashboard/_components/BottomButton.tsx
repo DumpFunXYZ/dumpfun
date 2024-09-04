@@ -35,7 +35,7 @@ export default function BottomButton({onClick}:any) {
   }
 
   return (
-    <div className={`fixed ${inputMode?'bottom-[42px]':'bottom-[22px]'} max-w-md w-[100%] flex items-center justify-center h-[42px]`}>
+    <div className={`fixed ${inputMode?'bottom-[0px]':'bottom-[22px]'} max-w-md w-[100%] flex items-center justify-center `}>
           {inputMode?<InputContainer onHide={onHide} />: <>
           
           {selectedCoin?<button onClick={()=>{

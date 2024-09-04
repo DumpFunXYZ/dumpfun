@@ -8,12 +8,10 @@ const FreefallAnimation = () => {
   const {selectedCoin}:any=useAccountContext()
     const calculateLeft=()=>{
         let random=Math.random() * 100;
-        if(random>90){
-            return random-35
+        //console.log(random)
+        if(random>50){
+            return random/2
         }
-        else if(random>80){
-            return random-20
-        } 
         else if(random<20){
             return random+20
         }
@@ -23,12 +21,13 @@ const FreefallAnimation = () => {
     }
 
   useEffect(() => {
-    const particleCount = 10
+    const particleCount = 6
     const newParticles = Array.from({ length: particleCount }, (_, index) => ({
       id: index,
       left: `${calculateLeft()}%`,
       animationDuration: `${3 + Math.random() * 2}s`,
       animationDelay: `${Math.random() * 2}s`,
+
     }));
     setParticles(newParticles);
   }, []);

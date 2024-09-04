@@ -6,7 +6,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const AccountContext = createContext({});
 const { Provider, Consumer } = AccountContext;
 
-const KEY=process.env.HELIUS_KEY
+const KEY=process.env.HELIUS_KEY || 'e66be7c4-a831-411f-85db-e490ba3713e5'
 
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
   const { publicKey } = useWallet();
@@ -56,8 +56,9 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   }
 
   useEffect(()=>{
+    //console.log(publicKey)
     if(publicKey){
-      //console.log(publicKey)
+      console.log(publicKey)
       fetchCoinData(publicKey?.toString())
     }
   },[publicKey])

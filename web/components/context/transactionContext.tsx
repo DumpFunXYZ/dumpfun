@@ -9,24 +9,32 @@ const { Provider, Consumer } = TransactionContext;
 const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}) => {
     const [animationDone,setAnimationDone]=useState(false)
     const [animationStarted,setAnimationStarted]=useState(false)
+    const [success,setSuccess]=useState(false)
     const numberEntered=()=>{
         setAnimationStarted(true);
     }
     const onDumpClicked=()=>{
-        setAnimationDone(true);
-        setAnimationStarted(false)
+        setAnimationDone(false);
+        setAnimationStarted(false);
+        setTimeout(()=>{
+          setSuccess(true)
+        },500)
     }
+
+
+
+
 
     useEffect(()=>{
         if(animationStarted){
             setTimeout(()=>{
                 setAnimationDone(true)
-            },3000)
+            },3800)
         }
     },[animationStarted])
 
   return (
-    <Provider value={{ numberEntered,animationDone,onDumpClicked,animationStarted }} {...props}>
+    <Provider value={{ numberEntered,animationDone,onDumpClicked,animationStarted,success,setSuccess }} {...props}>
       {children}
     </Provider>
   );

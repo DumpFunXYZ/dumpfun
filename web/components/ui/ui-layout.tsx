@@ -28,7 +28,7 @@ export function UiLayout({
 
   return (
     <div className='w-screen flex items-center w-[100%] overflow-y-hidden  justify-center bg-[#00191D] h-[100%]'>
-    <div className="h-full flex max-w-md h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col">
+    <div className="h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col">
       <div className="">
       
         <Suspense

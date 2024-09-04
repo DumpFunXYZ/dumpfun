@@ -21,11 +21,11 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
       open={isOpen}
       marginTop={120}
       fullScreen={true}
-      bodyStyle={{backgroundColor:'transparent',borderRadius:32}}
-      style={{zIndex:10,backgroundColor:'transparent',borderRadius:32}}
+      bodyStyle={{backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',maxWidth:430}}
+      style={{zIndex:10,backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column-reverse',alignItems:'center',justifyContent:'flex-end'}}
       onChange={() => setIsOpen(!isOpen)}
     >
-      <div className='bg-[#00191D] w-[100%] min-h-[100%] rounded-t-[32px] pt-[12px] px-[24px] flex flex-col items-center justify-start'>
+      <div className='bg-[#00191D] sm:w-[430px] w-screen min-h-[100%] rounded-t-[32px] pt-[12px] px-[24px] flex flex-col items-center justify-start'>
         <div className='w-[100%] flex flex-row items-center justify-between'>
             <p style={{lineHeight:'32px'}} className='bold text-[22px] text-[#B8E6EE]'>Your Wallet</p>
             <button onClick={()=>{
