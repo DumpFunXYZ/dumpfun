@@ -15,7 +15,7 @@ export function nFormatter(num:any) {
     if (numVal >= 1000) {
        return (numVal / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
     }
-    console.log(numVal)
+    //console.log(numVal)
     return numVal;
     
  }

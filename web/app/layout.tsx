@@ -7,8 +7,8 @@ import { AccountProvider } from '@/components/context/accountContext';
 import { TransactionProvider } from '@/components/context/transactionContext';
 import { Toaster } from 'react-hot-toast';
 export const metadata = {
-  title: 'dump-fun',
-  description: 'A place where you dump your shit coins',
+  title: 'Dump Fun',
+  description: 'A place where you dump your sh!t coins',
 };
 
 const links: { label: string; path: string }[] = [

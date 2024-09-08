@@ -84,6 +84,15 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
     }
   },[publicKey])
 
+  const restoreData=()=>{
+    if(publicKey){
+      fetchCoinData(publicKey?.toString())
+      setSelectedCoin(null)
+      setAmount(0)
+    }
+   
+  }
+
   useEffect(()=>{
     if(selectedCoin?.id){
       fetchDexData()
@@ -91,7 +100,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   },[selectedCoin])
 
   return (
-    <Provider value={{ AccountData,coinData,selectedCoin,setSelectedCoin,amount,setAmount,selectedTokenStats }} {...props}>
+    <Provider value={{ AccountData,coinData,selectedCoin,setSelectedCoin,amount,setAmount,selectedTokenStats,restoreData }} {...props}>
       {children}
     </Provider>
   );

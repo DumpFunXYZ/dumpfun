@@ -34,7 +34,7 @@ export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
             <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] text-[17px] regular'>Dump Coins</p>
             <button onClick={()=>{
                 setIsOpen(false)
-            }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[64px] w-[300px] h-[56px] bg-[rgba(37,179,204)] rounded-[32px] bold text-[22px]'>OK</button>
+            }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[64px] w-[300px] h-[56px] bg-[#42919E] rounded-[32px] bold text-[22px]'>OK</button>
         </div>
       </div>
     </SwipeableBottomSheet>

@@ -43,7 +43,7 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
                 <img src={item?.image} className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />
                 <div className='ml-[12px] flex flex-col items-start justify-start'>
                     <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] medium text-[17px]'>{item?.symbol}</p>
-                    <p style={{lineHeight:'24px'}} className='text-[rgba(37,179,204)] medium text-[17px] mt-[4px]'>{item?.formatted}</p>
+                    <p style={{lineHeight:'24px'}} className='text-[#42919E]medium text-[17px] mt-[4px]'>{item?.formatted}</p>
                 </div>
             </button>
         ))}

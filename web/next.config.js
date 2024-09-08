@@ -10,6 +10,7 @@ const nextConfig = {
     HELIUS_KEY:process.env.HELIUS_KEY,
     FIREBASE_API:process.env.FIREBASE_API,
     FIREBASE_APP_ID:process.env.FIREBASE_APP_ID,
+    RPC_ENDPOINT:process.env.RPC_ENDPOINT
   },
   webpack: (config) => {
     config.externals = [
