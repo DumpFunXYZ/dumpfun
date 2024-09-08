@@ -1,3 +1,4 @@
+
 import './global.css';
 import { UiLayout } from '@/components/ui/ui-layout';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
@@ -6,9 +7,14 @@ import { ReactQueryProvider } from './react-query-provider';
 import { AccountProvider } from '@/components/context/accountContext';
 import { TransactionProvider } from '@/components/context/transactionContext';
 import { Toaster } from 'react-hot-toast';
+import Head from 'next/head';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
+  image:'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9',
+  openGraph: {
+    images: 'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9',
+  },
 };
 
 const links: { label: string; path: string }[] = [
@@ -25,6 +31,23 @@ export default function RootLayout({
     <html lang="en">
      
       <body suppressHydrationWarning={true}>
+      <Head>
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta name="description" content="A place where you dump your sh!t coins"/>
+<meta property="og:url" content="https://dumpfun.xyz"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Dump Fun"/>
+<meta property="og:description" content="A place where you dump your sh!t coins"/>
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta name="description" content="A place where you dump your sh!t coins"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta property="twitter:domain" content="dumpfun.xyz"/>
+<meta property="twitter:url" content="https://dumpfun.xyz"/>
+<meta name="twitter:title" content="Dump Fun"/>
+<meta name="twitter:description" content="A place where you dump your sh!t coins"/>
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta name="description" content="A place where you dump your sh!t coins"/>
+</Head>
         <div className='status-bar'></div>
         <ReactQueryProvider>
           <ClusterProvider>
