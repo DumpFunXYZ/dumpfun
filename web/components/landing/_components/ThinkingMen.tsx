@@ -11,7 +11,7 @@ function ThinkingMan() {
         <div className='flex w-[100%] h-[100%] flex-col sm:items-start items-center sm:justify-center justify-start'>
             <p className='sm:text-[64px] text-[32px] sm:text-left text-center  semiBold text-[#00191D] animate-slide-in-left '>DumpFun</p>
             <p className='text-[18px] regular sm:text-left text-center text-[#00191D]  my-[18px] sm:my-[24px] sm:mt-[32px] mt-[16px] animate-slide-in-left '>Whether you're tired of holding onto worthless coins or just want to have some fun while cleaning up your crypto wallet, DumpFun makes it easy to dump bad tokens, earn $DUMP, and start fresh. Join us in taking out the trash—one token at a time</p>
-            {/* <button className='bg-[#42919E] rounded-[32px] animate-slide-in-bottom h-[56px] w-[300px] medium text-[18px] press-effect text-[#00191D]'>Start Dumping</button> */}
+            {/* <button className='bg-[rgba(37,179,204)] rounded-[32px] animate-slide-in-bottom h-[56px] w-[300px] medium text-[18px] press-effect text-[#00191D]'>Start Dumping</button> */}
         </div>
         
     </div>

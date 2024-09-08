@@ -28,7 +28,7 @@ export default function InputContainer({onHide}:any) {
         <div className='w-[100%] flex flex-row items-center justify-between py-[13px]'>
             <div className='flex flex-row items-center w-[100%] justify-start'>
                 <img src={selectedCoin?.image} className='w-[32px] h-[32px] rounded-[32px] border border-[1px] border-[#B8E6EE]'/>
-                <p style={{lineHeight:'24px'}} className='text-[17px] regular ml-[12px] text-[#42919E]'>{selectedCoin?.symbol}</p>
+                <p style={{lineHeight:'24px'}} className='text-[17px] regular ml-[12px] text-[rgba(37,179,204)]'>{selectedCoin?.symbol}</p>
             </div>
             <input ref={ref} value={amount} type={'number'} onChange={(e)=>{
                 setAmount(e?.target?.value)

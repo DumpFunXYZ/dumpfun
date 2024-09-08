@@ -55,7 +55,7 @@ export default function BottomButton({onClick}:any) {
               e.preventDefault();
               e.stopPropagation();
               onClick()
-            }} className={'medium text-[16px] text-[#42919E]'}>Change</p>
+            }} className={'medium text-[16px] text-[rgba(37,179,204)]'}>Change</p>
           </button>:
           <button onClick={()=>{
             onClick()

@@ -18,7 +18,7 @@ export default function Launch({setLoaded}:any) {
         <div className={`fixed max-w-md w-[100%] bottom-[24px] flex items-center justify-center`}>
           <button onClick={()=>{
             setLoaded(true)
-          }} style={{lineHeight:'32px'}} className='bg-[#42919E] rounded-[32px] h-[56px] w-[300px] flex items-center justify-center text-[#00191D] text-[22px] semiBold'>Start Dumping</button>
+          }} style={{lineHeight:'32px'}} className='bg-[rgba(37,179,204)] rounded-[32px] h-[56px] w-[300px] flex items-center justify-center text-[#00191D] text-[22px] semiBold'>Start Dumping</button>
         </div>
     </div>
   )
