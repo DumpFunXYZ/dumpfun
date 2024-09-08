@@ -19,7 +19,7 @@ export default function Dashboard() {
 
 
   return (
-    <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col">
+    <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col items-center justify-center">
       {loaded?<div className="h-full flex relative max-w-md w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] w-full flex-col">
         <div className='absolute overflow-y-hidden w-[100%] h-[100%] top-0'>
         <div className='gradientOne w-[100%] h-[65%]'></div>

@@ -1,26 +1,118 @@
 'use client'
-import { useWallet } from "@solana/wallet-adapter-react";
+import { addUserTransaction } from '@/utils/authUtils';
+//@ts-nocheck
+
+import { TOKEN_PROGRAM_ID, burn, getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createBurnInstruction } from '@solana/spl-token';
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { clusterApiUrl, Connection, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
+
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { toast } from 'react-hot-toast';
+import { useGetBalance } from '../account/account-data-access';
+import { useAccountContext } from './accountContext';
 
 const TransactionContext = createContext({});
 const { Provider, Consumer } = TransactionContext;
 
 const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}) => {
     const [animationDone,setAnimationDone]=useState(false)
+    const [tokenBalance,setTokenBalance]=useState(0)
     const [animationStarted,setAnimationStarted]=useState(false)
+    const {selectedCoin,selectedTokenStats,amount}:any=useAccountContext()
+    const { connection } = useConnection(); // Get the current connection to the cluster
+    const { publicKey, sendTransaction,wallet }:any = useWallet(); // Get the connected wallet
+    //const query = useGetBalance({ address:publicKey });
+  //console.log(selectedTokenStats)
+
+  
+
+  
+
+  //console.log('Balance',query?.data)
+    
     const [success,setSuccess]=useState(false)
     const numberEntered=()=>{
+      if(amount<selectedCoin?.formatted){
         setAnimationStarted(true);
+      }else{
+        setAnimationDone(false)
+        toast('Insufficient Amount Entered')
+      }
+        
     }
     const onDumpClicked=()=>{
         setAnimationDone(false);
         setAnimationStarted(false);
-        setTimeout(()=>{
-          setSuccess(true)
-        },500)
+        
+        burnToken(selectedCoin?.id,amount*10**selectedCoin?.decimals)
     }
 
+    //const BurnTokens = () => {
+    
+    
+      const burnToken = async (
+        mintAddress: PublicKey,
+        amount: number
+      ) => {
+        if (!publicKey) {
+          console.error('Wallet not connected');
+          return;
+        }
+        const tokenMint = new PublicKey(mintAddress);
+        try {
+          // Get the token account
+          const tokenAccount = await getAssociatedTokenAddress(
+            tokenMint,
+            publicKey
+          );
+    
+          // Create the burn instruction
+          const burnInstruction = createBurnInstruction(
+            tokenAccount,
+            tokenMint,
+            publicKey,
+            amount
+          );
+          // Create a new transaction and add the burn instruction
+          const transaction = new Transaction().add(burnInstruction);
+          const {
+            context: { slot: minContextSlot },
+            value: { blockhash, lastValidBlockHeight }
+        } = await connection.getLatestBlockhashAndContext();
+          // Send the transaction
+          const signature = await sendTransaction(transaction,connection);
+          toast('⌛ Transaction Sent to Blockchain for Confirmation')  
+          //console.log(signature?.toString())
+            
+            // setTimeout(async()=>{
+            //   const data = await connection.getSignatureStatuses([signature?.toString()],{
+            //     searchTransactionHistory:true
+            //   })
+            //   console.log('Data',data)
+            // },10000)
+  
+          // Wait for confirmation
+//          await connection.getSignatureStatus(signature);
+
+
+setTimeout(()=>{
+  setSuccess(true)
+  toast('✅ Transaction Successful') 
+  addUserTransaction(publicKey?.toString(),signature?.toString(),amount/10**selectedCoin?.decimals,amount*(selectedTokenStats?.priceUsd || 0),selectedCoin?.name,(selectedTokenStats?.fdv || 0),tokenMint?.toString())
+},2000)
+          
+          console.log('Tokens burned successfully');
+        } catch (error) {
+          toast('❌ Transaction Failed or Low Solana Balance') 
+          console.error('Error burning tokens:', error);
+          //if
+          //toast('User Rejected the Request')
+        }
+      }
+      //};
+
+   
 
 
 

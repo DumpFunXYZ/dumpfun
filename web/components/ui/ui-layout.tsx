@@ -40,7 +40,6 @@ export function UiLayout({
         >
           {children}
         </Suspense>
-        <Toaster position="bottom-right" />
       </div>
      
     </div>

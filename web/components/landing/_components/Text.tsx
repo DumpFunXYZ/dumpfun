@@ -10,7 +10,9 @@ function TextComponent() {
         <div className='w-[100%] flex sm:flex-row flex-col absolute bottom-10 px-[24px] items-center justify-between'>
             <p className='medium sm:text-[16px] text-[12px] text-[#00191D]'>contact@dumpfun.xyz</p>
             <div className='flex flex-row my-[12px] items-center justify-center'>
-               <button  className='mr-[12px]'>
+               <button onClick={()=>{
+                window.location.href='https://t.me/+WoPP-lH6JLhjY2E1'
+               }} className='mr-[12px]'>
                 <img className='h-[32px] w-[32px] rounded-[32px]' src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png'}/>
                 </button> 
                 <button onClick={()=>{

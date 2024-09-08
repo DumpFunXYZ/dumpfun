@@ -1,4 +1,5 @@
 'use client'
+import { addUserIfNotExists } from "@/utils/authUtils";
 import { useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -12,8 +13,27 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const { publicKey } = useWallet();
   const [AccountData, setAccountData] = useState(null);
   const [coinData,setCoinData]=useState([])
-  const [selectedCoin,setSelectedCoin]=useState(null)
+  const [selectedCoin,setSelectedCoin]:any=useState(null)
   const [amount,setAmount]=useState(0)
+  const [selectedTokenStats,setSelectedTokenStats]=useState([]);
+
+
+  const fetchDexData=async()=>{
+    const data= await axios.get(`https://api.dexscreener.com/latest/dex/tokens/${selectedCoin?.id}`)
+    if(data.data?.pairs){
+      let filter=[...data?.data?.pairs].filter((item:any,index:any)=>{
+            return (item?.dexId==='raydium' && item?.quoteToken?.symbol==='SOL')
+      })
+      //console.log(data?.data?.pairs)
+      if(filter.length>0){
+        setSelectedTokenStats(filter?.[0])
+        //console.log('Filter',filter)
+      }
+      else{
+        setSelectedTokenStats(data.data?.pairs?.[0])
+      }
+    }
+  }
 
 
   const fetchCoinData=async(publicKey:string)=>{
@@ -50,7 +70,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
         }
         sortedToken?.push(tokenData)
       }
-      console.log(sortedToken)
+      //console.log(sortedToken)
       setCoinData(sortedToken)
     })  
   }
@@ -58,13 +78,20 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   useEffect(()=>{
     //console.log(publicKey)
     if(publicKey){
-      console.log(publicKey)
+      //console.log(publicKey)
       fetchCoinData(publicKey?.toString())
+      addUserIfNotExists(publicKey?.toString())
     }
   },[publicKey])
 
+  useEffect(()=>{
+    if(selectedCoin?.id){
+      fetchDexData()
+    }
+  },[selectedCoin])
+
   return (
-    <Provider value={{ AccountData,coinData,selectedCoin,setSelectedCoin,amount,setAmount }} {...props}>
+    <Provider value={{ AccountData,coinData,selectedCoin,setSelectedCoin,amount,setAmount,selectedTokenStats }} {...props}>
       {children}
     </Provider>
   );

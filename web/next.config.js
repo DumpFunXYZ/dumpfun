@@ -1,4 +1,3 @@
-//@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
@@ -7,6 +6,11 @@ const { composePlugins, withNx } = require('@nx/next');
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  env: {
+    HELIUS_KEY:process.env.HELIUS_KEY,
+    FIREBASE_API:process.env.FIREBASE_API,
+    FIREBASE_APP_ID:process.env.FIREBASE_APP_ID,
+  },
   webpack: (config) => {
     config.externals = [
       ...(config.externals || []),

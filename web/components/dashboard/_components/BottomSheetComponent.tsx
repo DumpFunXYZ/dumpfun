@@ -34,6 +34,7 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
         </div>
         {coinData.map((item:any,index:any)=>(
             <button 
+            key={item?.id}
             onClick={()=>{
               setSelectedCoin(item)
               setIsOpen(false)

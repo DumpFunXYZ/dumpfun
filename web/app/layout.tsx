@@ -5,7 +5,7 @@ import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
 import { AccountProvider } from '@/components/context/accountContext';
 import { TransactionProvider } from '@/components/context/transactionContext';
-
+import { Toaster } from 'react-hot-toast';
 export const metadata = {
   title: 'dump-fun',
   description: 'A place where you dump your shit coins',
@@ -24,13 +24,19 @@ export default function RootLayout({
   return (
     <html lang="en">
      
-      <body>
+      <body suppressHydrationWarning={true}>
         <div className='status-bar'></div>
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
               <AccountProvider>
                 <TransactionProvider>
+                <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
+
+
               <UiLayout links={links}>{children}</UiLayout>
               </TransactionProvider>
               </AccountProvider>
