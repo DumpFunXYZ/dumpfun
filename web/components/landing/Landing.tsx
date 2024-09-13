@@ -1,6 +1,7 @@
 import React from 'react'
 import NavBar from '../dashboard/_components/NavBar'
 import Hero from './_components/Hero'
+import Memes from './_components/Memes'
 import Mockup from './_components/Mockup'
 import NavbarLanding from './_components/NavBar'
 import Stats from './_components/Stats'
@@ -17,6 +18,7 @@ function Landing() {
         <Mockup/>
         <Stats/>
         <TweetComponent/>
+        <Memes/>
         <TextComponent/>
 
     </div>

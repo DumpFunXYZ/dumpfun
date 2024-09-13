@@ -24,6 +24,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const { publicKey, sendTransaction,wallet }:any = useWallet(); // Get the connected wallet
     //const query = useGetBalance({ address:publicKey });
   //console.log(selectedTokenStats)
+  //let audio = new Audio("https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Fflush.mp3?alt=media&token=75b2eed4-97de-47b8-a8ed-833395709be7")
 
   
 
@@ -41,11 +42,11 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       }
         
     }
-    const onDumpClicked=()=>{
+    const onDumpClicked=(successFunction:any)=>{
         setAnimationDone(false);
         setAnimationStarted(false);
         
-        burnToken(selectedCoin?.id,amount*10**selectedCoin?.decimals)
+        burnToken(selectedCoin?.id,amount*10**selectedCoin?.decimals,successFunction)
     }
 
     //const BurnTokens = () => {
@@ -53,7 +54,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     
       const burnToken = async (
         mintAddress: PublicKey,
-        amount: number
+        amount: number,
+        successFunction:any,
       ) => {
         if (!publicKey) {
           console.error('Wallet not connected');
@@ -87,6 +89,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
 
           toast('⌛ Transaction Sent to Blockchain for Confirmation')  
           console.log(signature)
+          successFunction()
           await connection.confirmTransaction({signature,blockhash,lastValidBlockHeight},'confirmed').then((res)=>{
             setTimeout(()=>{
               setSuccess(true)

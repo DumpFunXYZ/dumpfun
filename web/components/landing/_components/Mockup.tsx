@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-
+/*@ts-ignore*/
 import Iphone15Pro from '../../../app/assets/demo1.gif'
 function Mockup() {
   return (

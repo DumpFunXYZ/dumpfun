@@ -3,6 +3,9 @@ import React from 'react'
 import Logo from '../../../app/assets/logo.svg'
 
 function Hero() {
+
+
+  
   return (
     <div className='w-screen bg-[#00191D] flex items-center justify-center sm:px-[48px] px-[12px] min-h-screen sm:flex-row flex-col-reverse'>
         <div className='flex w-[100%] h-[100%] flex-col sm:items-start items-center sm:justify-center justify-start'>

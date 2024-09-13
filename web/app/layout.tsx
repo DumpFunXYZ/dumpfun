@@ -7,13 +7,14 @@ import { ReactQueryProvider } from './react-query-provider';
 import { AccountProvider } from '@/components/context/accountContext';
 import { TransactionProvider } from '@/components/context/transactionContext';
 import { Toaster } from 'react-hot-toast';
+import mixpanel from "mixpanel-browser";
 import Head from 'next/head';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
-  image:'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9',
+  image:'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7',
   openGraph: {
-    images: 'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9',
+    images: 'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7',
   },
 };
 
@@ -32,20 +33,20 @@ export default function RootLayout({
      
       <body suppressHydrationWarning={true}>
       <Head>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 <meta property="og:url" content="https://dumpfun.xyz"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Dump Fun"/>
 <meta property="og:description" content="A place where you dump your sh!t coins"/>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta property="twitter:domain" content="dumpfun.xyz"/>
 <meta property="twitter:url" content="https://dumpfun.xyz"/>
 <meta name="twitter:title" content="Dump Fun"/>
 <meta name="twitter:description" content="A place where you dump your sh!t coins"/>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Flogo.svg?alt=media&token=fd508932-60e7-4504-8f6b-8b66ed4161a9" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 </Head>
         <div className='status-bar'></div>
