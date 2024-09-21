@@ -9,6 +9,7 @@ import { TransactionProvider } from '@/components/context/transactionContext';
 import { Toaster } from 'react-hot-toast';
 import mixpanel from "mixpanel-browser";
 import Head from 'next/head';
+import Script from 'next/script';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
@@ -49,6 +50,15 @@ export default function RootLayout({
 <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 </Head>
+<Script id="ms_clarity" type="text/javascript">
+          {`
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "o2xjrhl8cv");
+        `}
+        </Script>
         <div className='status-bar'></div>
         <ReactQueryProvider>
           <ClusterProvider>

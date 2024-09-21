@@ -40,7 +40,8 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
               setIsOpen(false)
             }}
             className='py-[16px] w-[100%] flex flex-row items-center justify-start'>
-                <img src={item?.image} className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />
+                {item?.image?<img src={item?.image} className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />:<div className={'w-[48px] h-[48px] border border-[#B8E6EE] text-[32px] border-[1px] rounded-[32px] items-center justify-center flex'}>💩</div>}
+                
                 <div className='ml-[12px] flex flex-col items-start justify-start'>
                     <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] medium text-[17px]'>{item?.symbol}</p>
                     <p style={{lineHeight:'24px'}} className='text-[#42919E]medium text-[17px] mt-[4px]'>{item?.formatted}</p>

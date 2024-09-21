@@ -18,6 +18,7 @@ const { Provider, Consumer } = TransactionContext;
 const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}) => {
     const [animationDone,setAnimationDone]=useState(false)
     const [tokenBalance,setTokenBalance]=useState(0)
+    const [loading,setLoading]=useState(false)
     const [animationStarted,setAnimationStarted]=useState(false)
     const {selectedCoin,selectedTokenStats,amount,restoreData}:any=useAccountContext()
     const { connection } = useConnection(); // Get the current connection to the cluster
@@ -68,7 +69,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             tokenMint,
             publicKey
           );
-    
+
+          setLoading(true)
           // Create the burn instruction
           const burnInstruction = createBurnInstruction(
             tokenAccount,
@@ -80,24 +82,26 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           const transaction = new Transaction().add(burnInstruction);
           
           // Send the transaction
-          const signature = await sendTransaction(transaction,connection);
+          const signature = await sendTransaction(transaction,connection)
 
           const {
             context: { slot: minContextSlot },
             value: { blockhash, lastValidBlockHeight }
         } = await connection.getLatestBlockhashAndContext();
 
-          toast('⌛ Transaction Sent to Blockchain for Confirmation')  
+          toast('⌛ Transaction Sent for Confirmation')  
           console.log(signature)
           successFunction()
           await connection.confirmTransaction({signature,blockhash,lastValidBlockHeight},'confirmed').then((res)=>{
-            setTimeout(()=>{
-              setSuccess(true)
-              toast('✅ Transaction Successful') 
-              restoreData()
-              addUserTransaction(publicKey?.toString(),signature?.toString(),amount/10**selectedCoin?.decimals,amount*(selectedTokenStats?.priceUsd || 0),selectedCoin?.name,(selectedTokenStats?.fdv || 0),tokenMint?.toString())
-            },1000)        //console.log('Tokens burned successfully');
+                 //console.log('Tokens burned successfully');
           })
+          setTimeout(()=>{
+            setSuccess(true)
+            setLoading(false)
+            toast('✅ Transaction Successful') 
+            restoreData()
+            addUserTransaction(publicKey?.toString(),signature?.toString(),amount/10**selectedCoin?.decimals,(amount/10**selectedCoin?.decimals)*(selectedTokenStats?.priceUsd || 0),selectedCoin?.name,(selectedTokenStats?.fdv || 0),tokenMint?.toString())
+          },2000)  
 
           
           //console.log(signature?.toString())
@@ -115,6 +119,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
 
 
         } catch (error) {
+          setLoading(false)
           toast('❌ Transaction Failed or Low Solana Balance') 
           console.error('Error burning tokens:', error);
           //if
@@ -137,7 +142,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     },[animationStarted])
 
   return (
-    <Provider value={{ numberEntered,animationDone,onDumpClicked,animationStarted,success,setSuccess }} {...props}>
+    <Provider value={{ loading,numberEntered,animationDone,onDumpClicked,animationStarted,success,setSuccess }} {...props}>
       {children}
     </Provider>
   );

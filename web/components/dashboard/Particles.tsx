@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAccountContext } from '../context/accountContext';
 import { useTransactionContext } from '../context/transactionContext';
+import Shitcoin from '../../app/assets/shitcoin.png'
 
 const FreefallAnimation = () => {
   const [particles, setParticles]:any = useState([]);
@@ -42,7 +43,7 @@ const FreefallAnimation = () => {
      {!animationDone?<>
        {particles.map((particle:any) => (
        <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          key={particle.id}
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white animate-fall"
          style={{
@@ -54,32 +55,32 @@ const FreefallAnimation = () => {
      ))}
      </>:<div className=' mt-[120px] w-[100%] flex flex-col items-center bg-[red] justify-end'>
      <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-0 "
        />
        <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-1 right-1 "
        />
        <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-4 right-1 "
        />
        <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-4 left-1 "
        />
         <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-6 "
        />
        <img
-       src={selectedCoin?.image}
+       src={selectedCoin?.image || Shitcoin?.src}
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-1 left-1"
        />
