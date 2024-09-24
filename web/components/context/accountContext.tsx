@@ -7,7 +7,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 const AccountContext = createContext({});
 const { Provider, Consumer } = AccountContext;
 
-const KEY=process.env.HELIUS_KEY || 'e66be7c4-a831-411f-85db-e490ba3713e5'
+const KEY=process.env.HELIUS_KEY
 
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
   const { publicKey } = useWallet();

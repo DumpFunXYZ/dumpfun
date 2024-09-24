@@ -15,14 +15,15 @@ interface BottomSheet{
 
 export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
   const {coinData,setSelectedCoin}:any=useAccountContext();
+  //console.log(coinData)
   return (
     <SwipeableBottomSheet
       overflowHeight={60}
       open={isOpen}
       marginTop={120}
       fullScreen={true}
-      bodyStyle={{backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',maxWidth:430}}
-      style={{zIndex:10,backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column-reverse',alignItems:'center',justifyContent:'flex-end'}}
+      bodyStyle={{backgroundColor:'#00191D',borderRadius:32,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',maxWidth:430,}}
+      style={{zIndex:10,backgroundColor:'#00191D',borderRadius:32,display:'flex',flexDirection:'column-reverse',alignItems:'center',justifyContent:'flex-end'}}
       onChange={() => setIsOpen(!isOpen)}
     >
       <div className='bg-[#00191D] sm:w-[430px] w-screen min-h-[100%] rounded-t-[32px] pt-[12px] px-[24px] flex flex-col items-center justify-start'>
@@ -40,10 +41,20 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
               setIsOpen(false)
             }}
             className='py-[16px] w-[100%] flex flex-row items-center justify-start'>
-                {item?.image?<img src={item?.image} className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />:<div className={'w-[48px] h-[48px] border border-[#B8E6EE] text-[32px] border-[1px] rounded-[32px] items-center justify-center flex'}>💩</div>}
+                {item?.image?<img src={item?.image}
+                onError={({ currentTarget }) => {
+                  console.log('Err',currentTarget)
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src="https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/shitcoin.png?alt=media&token=dea26698-2996-41cd-8a1b-9e11b9c7e97e";
+                }}
+                
+                className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />:<img src={"https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/shitcoin.png?alt=media&token=dea26698-2996-41cd-8a1b-9e11b9c7e97e"}
+                
+                
+                className={'w-[48px] h-[48px] border border-[#B8E6EE] border-[1px] rounded-[32px]'} />}
                 
                 <div className='ml-[12px] flex flex-col items-start justify-start'>
-                    <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] medium text-[17px]'>{item?.symbol}</p>
+                    <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] medium text-[17px]'>{item?.symbol || 'SH!T COIN'}</p>
                     <p style={{lineHeight:'24px'}} className='text-[#42919E]medium text-[17px] mt-[4px]'>{item?.formatted}</p>
                 </div>
             </button>
