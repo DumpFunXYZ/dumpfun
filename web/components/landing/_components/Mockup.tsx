@@ -11,7 +11,7 @@ function Mockup() {
         onClick={()=>{
           window.location.href='https://forms.gle/zC793WeL2Lbw9Fjk9'
         }}
-        style={{lineHeight:'32px'}} className='bg-[rgba(37,179,204)] my-[30px] rounded-[32px] min-h-[56px] w-[300px] flex items-center justify-center text-[#00191D] text-[22px] semiBold'>Join the Whitelist</button>
+        style={{lineHeight:'32px'}} className='bg-[rgba(37,179,204)] my-[30px] rounded-[32px] min-h-[56px] w-[300px] flex items-center justify-center text-[#00191D] text-[22px] bold'>Join the Whitelist</button>
     </div>
     
   )

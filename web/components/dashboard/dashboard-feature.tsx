@@ -47,7 +47,6 @@ export default function Dashboard() {
         
         {success && <SuccessSheet isOpen={success} setIsOpen={setSuccess}/>}
         {loading && <Loading/>}
-        
       </div>:<Launch setLoaded={setLoaded}/>}
       
       

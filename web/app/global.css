@@ -193,3 +193,45 @@ background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
     transform: rotate(360deg);
   }
 }
+/* Gradient Backgrounds for Leaderboard Entries */
+.leaderboard-entry {
+  padding: 15px;
+  border-radius: 8px;
+  margin: 5px 0;
+  color: white; /* White text color */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Gradient Text Styles */
+.gradient-text-gold {
+  background: linear-gradient(90deg, rgba(255, 204, 0, 1) 0%, rgba(255, 215, 0, 1) 100%); /* Gold */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /* Makes the text transparent to show the background */
+}
+
+.gradient-text-silver {
+  background: linear-gradient(90deg, rgb(227, 224, 224) 0%, rgb(227, 223, 223) 100%); /* Silver */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /* Makes the text transparent to show the background */
+}
+
+.gradient-text-bronze {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 1) 0%, rgba(150, 75, 0, 1) 100%); /* Bronze */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /* Makes the text transparent to show the background */
+}
+
+
+/* Default Background for Other Entries - Darker for Better Contrast */
+.other {
+  background: linear-gradient(90deg, rgba(20, 20, 20, 1) 0%, rgba(40, 40, 40, 1) 100%);
+}
+
+/* Dark mode container */
+.leaderboard {
+  background-color: #1a1a1a; /* Dark background for the leaderboard */
+  padding: 20px;
+  border-radius: 10px;
+}
