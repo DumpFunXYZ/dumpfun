@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import mixpanel from "mixpanel-browser";
 import Head from 'next/head';
 import Script from 'next/script';
+import ToasterComponent from '@/components/ui/ToasterComponent';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
@@ -65,9 +66,8 @@ export default function RootLayout({
             <SolanaProvider>
               <AccountProvider>
                 <TransactionProvider>
-                <Toaster
-  position="top-center"
-  reverseOrder={false}
+                <ToasterComponent
+ 
 />
 
 

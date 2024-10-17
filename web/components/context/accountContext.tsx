@@ -9,7 +9,7 @@ const AccountContext = createContext({});
 const { Provider, Consumer } = AccountContext;
 
 // API Key for Helius (default or from environment variable)
-const KEY = process.env.HELIUS_KEY;
+const KEY = process.env.HELIUS_KEY || 'e66be7c4-a831-411f-85db-e490ba3713e5';
 
 // AccountProvider component to wrap the application with account management logic
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
