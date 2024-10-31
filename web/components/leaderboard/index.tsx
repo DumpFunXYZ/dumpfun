@@ -45,7 +45,7 @@ export default function LeaderBoard() {
                     <p className={`text-[32px] text-[white] min-w-[30px] ${getGradientText(index)}`}>{index+1}</p>
                     <div className='flex flex-col items-start ml-[20px] justify-start'>
                     <p className='semiBold text-[16px] text-[white]'>{truncate(item?.name,14)}</p>
-                    <p className='semiBold text-[14px] text-[white]'>$ {(item?.totalPoints/10)?.toFixed(2)}</p>
+                    <p className='semiBold text-[14px] text-[white]'>{(item?.totalPoints)} DUMP </p>
                     </div>
                     </div>
                     <p className='semiBold text-right min-w-[100px] text-[14px] text-[white]'>{dumpNicknames?.[index] || 'Dumpster'}</p>

@@ -2,8 +2,10 @@
 import { useAccountContext } from '@/components/context/accountContext';
 import { useEffect, useState } from 'react';
 import CoinLogo from '../../../app/assets/coin-logo.svg'
+import SolanaLogo from '../../../app/assets/solana.svg'
 /*@ts-ignore */
 import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
+import { useTransactionContext } from '@/components/context/transactionContext';
 
 interface BottomSheet{
     isOpen:boolean,
@@ -15,26 +17,37 @@ interface BottomSheet{
 
 
 export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
-  const {coinData,setSelectedCoin}:any=useAccountContext();
+  const {coinData,setSelectedCoin,selectedCoin,amount,burntToken}:any=useAccountContext();
+  const {earnedSolana,earnedPoints}:any=useTransactionContext()
+  
   return (
     <SwipeableBottomSheet
       overflowHeight={60}
       open={isOpen}
       marginTop={120}
       fullScreen={false}
-      bodyStyle={{backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',width:'100%'}}
-      style={{zIndex:10,backgroundColor:'transparent',borderRadius:32,display:'flex',flexDirection:'column-reverse',alignItems:'center',justifyContent:'flex-end',width:'100%'}}
+      bodyStyle={{backgroundColor:'#00191D',borderRadius:32,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',maxWidth:430,}}
+      style={{zIndex:10,backgroundColor:'#00191D',borderRadius:32,display:'flex',flexDirection:'column-reverse',alignItems:'center',justifyContent:'flex-end'}}
       onChange={() => setIsOpen(!isOpen)}
     >
       <div className='bg-[#00191D] sm:min-w-[430px] w-screen min-h-[100%] rounded-t-[32px] pt-[12px] px-[24px] flex flex-col items-center justify-start'>
         <p style={{lineHeight:'32px'}} className='bold text-[22px] text-[#B8E6EE]'>🎉 Congratulations</p>
         <div className='w-[100%] py-[24px] flex flex-col items-center justify-center'>
             <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] text-[17px] regular'>You've just earned</p>
-            <p style={{lineHeight:'32px'}} className='text-[#B8E6EE] text-[22px] flex flex-row items-center justify-center semiBold m-[8px]'>1,320 <img className='ml-[8px] w-[24px] h-[24px]' src={CoinLogo.src}/></p>
-            <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] text-[17px] regular'>Dump Coins</p>
+            <p style={{lineHeight:'32px'}} className='text-[#B8E6EE] text-[22px] flex flex-row items-center justify-center semiBold m-[8px]'>{earnedPoints?.toFixed(2)} <img className='ml-[8px] w-[24px] h-[24px]' src={CoinLogo.src}/></p>
+            <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] text-[17px] regular mb-[20px]'>Dump Points</p>
+            {earnedSolana>0 && <>
+              <p style={{lineHeight:'32px'}} className='text-[#B8E6EE] text-[22px] flex flex-row items-center justify-center semiBold m-[8px]'>{earnedSolana} <img className='ml-[8px] w-[24px] h-[24px]' src={SolanaLogo.src}/></p>
+            <p style={{lineHeight:'24px'}} className='text-[#B8E6EE] text-[17px] regular'>Solana</p>
+            </>}
+            
             <button onClick={()=>{
-                setIsOpen(false)
-            }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[64px] w-[300px] h-[56px] bg-[#42919E] rounded-[32px] bold text-[22px]'>OK</button>
+                let content = `Just burnt ${burntToken?.amount} ${burntToken?.name} on @dumpfunxyz !! %0A%0A 🔥 Burn tokens, earn rewards! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart burning today on https://dumpfun.xyz/app! `
+                 window.open(`https://x.com/intent/tweet?text=${content}`, '_blank')
+            }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[20px] w-[300px] h-[56px] bg-[#42919E] rounded-[32px] bold text-[22px] text-[white]'>Share</button>
+            <button onClick={()=>{
+              setIsOpen(false)
+            }} style={{lineHeight:'24px'}} className='text-[#fff] text-[17px] mb-[64px] regular underline'>Done</button>
         </div>
       </div>
     </SwipeableBottomSheet>

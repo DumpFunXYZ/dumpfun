@@ -15,15 +15,15 @@ const POINTS_PER_TRADE = 100; // Define the reward rate: $10 trade gives 100 poi
  * - If the user exists, update their total points and add the new trade to their history.
  * - If the user does not exist, create a new user document with the initial trade data.
  */
-export async function addTrade(walletAddress:string, tradeAmount:number,liquidity:number) {
+export async function addTrade(walletAddress:string, tradeAmount:number,liquidity:number,hash:string,points:any) {
     // Reference the user document in the 'rewards' collection by their wallet address
     const userRef = doc(firestore, 'rewards', walletAddress);
-    
+    //let points=100;
     // Get the user data from Firestore
     const userSnap = await getDoc(userRef);
 
     // Calculate the points based on the trade amount (e.g., $10 = 100 points)
-    const points = (tradeAmount / 10) * POINTS_PER_TRADE || 0;
+    //const points = (tradeAmount / 10) * POINTS_PER_TRADE || 0;
 
     if (userSnap.exists()) {
         // User exists, update their points and trade history
@@ -36,10 +36,11 @@ export async function addTrade(walletAddress:string, tradeAmount:number,liquidit
             trades: arrayUnion({
                 amount: tradeAmount,
                 points: points,
+                hash:hash,
                 timestamp: new Date(), // Record the trade timestamp
             }),
         });
-        console.log(`Trade added! ${walletAddress} now has ${newTotalPoints} points.`);
+        //console.log(`Trade added! ${walletAddress} now has ${newTotalPoints} points.`);
     } else {
         // User doesn't exist, create a new user document with the trade and points
         await setDoc(userRef, {

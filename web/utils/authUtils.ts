@@ -31,7 +31,7 @@ export const addUserIfNotExists = async (walletAddress: string): Promise<void> =
   }
 };
 
-export const addUserTransaction = async (walletAddress: string,hash:any,amount:any,amountInUsd:any,name:string,volume:any,tokenAddress:any): Promise<void> => {
+export const addUserTransaction = async (walletAddress: string,hash:any,amount:any,amountInUsd:any,name:string,volume:any,tokenAddress:any,earnedSolana:any): Promise<void> => {
     try {
       const userDocRef = doc(firestore, 'dumps', hash);
       //console.log(walletAddress,hash,amount,amountInUsd,name,volume)
@@ -48,7 +48,37 @@ export const addUserTransaction = async (walletAddress: string,hash:any,amount:a
           name:name,
           volume:volume,
           createdAt: Timestamp.now(),
-          tokenAddress:tokenAddress
+          tokenAddress:tokenAddress,
+          rent:earnedSolana
+        };
+        await setDoc(userDocRef, userData);
+        //console.log('Document added for wallet address:', walletAddress);
+      } else {
+        //console.log('Document already exists for wallet address:', walletAddress);
+      }
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  };
+  export const addUserNFTTransaction = async (walletAddress: string,hash:any,amount:any,amountInUsd:any,name:string,volume:any,tokenAddress:any,earnedSolana:any): Promise<void> => {
+    try {
+      const userDocRef = doc(firestore, 'nft-dumps', hash);
+      //console.log(walletAddress,hash,amount,amountInUsd,name,volume)
+      // Check if the document already exists
+      const docSnapshot = await getDoc(userDocRef);
+      
+      if (!docSnapshot.exists()) {
+        // If it doesn't exist, create a new document with walletAddress and timestamp
+        const userData = {
+          address:walletAddress,
+          hash:hash,
+          amount:amount,
+          amountInUsd:amountInUsd,
+          name:name,
+          volume:volume,
+          createdAt: Timestamp.now(),
+          tokenAddress:tokenAddress,
+          rent:earnedSolana
         };
         await setDoc(userDocRef, userData);
         //console.log('Document added for wallet address:', walletAddress);

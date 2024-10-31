@@ -16,9 +16,11 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const { publicKey } = useWallet(); // Get the connected wallet's public key from Solana wallet adapter
   const [AccountData, setAccountData] = useState(null); // State to store account-related data (currently unused)
   const [coinData, setCoinData] = useState([]); // State to store the list of user's tokens
+  const [nftData,setNftData]=useState([]);
   const [selectedCoin, setSelectedCoin]: any = useState(null); // State for the selected token
   const [amount, setAmount] = useState(0); // State for the amount of the selected token
-  const [selectedTokenStats, setSelectedTokenStats] = useState([]); // State to store stats for the selected token
+  const [selectedTokenStats, setSelectedTokenStats] = useState(null); // State to store stats for the selected token
+  const [burntToken,setBurntToken]=useState(null)
 
   // Function to fetch detailed DEX data for the selected token from DexScreener API
   const fetchDexData = async () => {
@@ -42,6 +44,9 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
         setSelectedTokenStats(data.data?.pairs?.[0]); // Otherwise, use the first pair available
       }
     }
+    else{
+      setSelectedTokenStats(null)
+    }
   };
 
   // Function to fetch the user's token data using Helius API
@@ -62,6 +67,12 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
         return item?.interface === 'FungibleToken'; // Filter out only fungible tokens
       });
 
+      const nftFilter=[...tokens].filter((item, index) => {
+        return item?.interface !== 'FungibleToken' && item?.token_info?.supply>0; // Filter out only fungible tokens
+      });
+
+      //console.log(nftFilter)
+
       // Process the filtered tokens to extract relevant data
       let sortedToken: any = [];
       for (var i = 0; i < filter.length; i++) {
@@ -79,7 +90,27 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
         };
         sortedToken?.push(tokenData); // Push each token data into the sortedToken array
       }
+      //console.log(sortedToken)
       setCoinData(sortedToken); // Update state with the sorted tokens
+      let sortedNFTs:any=[];
+      for (var i = 0; i < nftFilter.length; i++) {
+        let tk = nftFilter?.[i];
+        let tokenData = {
+          id: tk?.id,
+          name: tk?.content?.metadata?.name,
+          symbol: tk?.content?.metadata?.symbol,
+          image: tk?.content?.files?.[0]?.cdn_uri || tk?.content?.files?.[0]?.uri,
+          balance: tk?.token_info?.balance,
+          formatted: tk?.token_info?.balance, // Format balance with decimals
+          tokenProgram: tk?.token_info?.token_program,
+          address: tk?.token_info?.associated_token_address,
+          decimals: tk?.token_info?.decimals,
+          type:'nft'
+        };
+        sortedNFTs?.push(tokenData); // Push each token data into the sortedToken array
+      }
+      //console.log(sortedNFTs)
+      setNftData(sortedNFTs); 
     });
   };
 
@@ -95,6 +126,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const restoreData = () => {
     if (publicKey) {
       fetchCoinData(publicKey?.toString()); // Re-fetch token data
+      setBurntToken({...selectedCoin,amount:amount});
       setSelectedCoin(null); // Reset selected token
       setAmount(0); // Reset amount
     }
@@ -109,7 +141,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
 
   // Return the provider that supplies account-related data to the app
   return (
-    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData }} {...props}>
+    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData }} {...props}>
       {children}
     </Provider>
   );

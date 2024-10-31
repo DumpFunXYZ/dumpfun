@@ -101,6 +101,8 @@ input{
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
+
+
 .press-effect:active {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   transform: translateY(2px);
@@ -168,17 +170,24 @@ background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
 
 @keyframes fall {
   0% {
-    transform: translateY(-100%);
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
   }
   100% {
-    transform: translateY(calc(100vh - 32px));
+    transform: translateY(100vh);
+    opacity: 1;
   }
 }
 
 .animate-fall {
   animation-name: fall;
-  animation-timing-function: linear;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); /* Smooth easing */
+  animation-fill-mode: forwards;
   animation-iteration-count: 1;
+  will-change: transform, opacity;
 }
 
 .anim-spin {
@@ -234,4 +243,8 @@ background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
   background-color: #1a1a1a; /* Dark background for the leaderboard */
   padding: 20px;
   border-radius: 10px;
+}
+
+.animate-fall {
+  will-change: transform, opacity;
 }

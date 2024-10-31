@@ -22,16 +22,19 @@ const FreefallAnimation = () => {
     }
 
   useEffect(() => {
-    const particleCount = 6
-    const newParticles = Array.from({ length: particleCount }, (_, index) => ({
-      id: index,
-      left: `${calculateLeft()}%`,
-      animationDuration: `${3 + Math.random() * 2}s`,
-      animationDelay: `${Math.random() * 2}s`,
-
-    }));
-    setParticles(newParticles);
-  }, []);
+    if(selectedCoin){
+      const particleCount =  selectedCoin?.type=='nft'?1:6
+      const newParticles = Array.from({ length: particleCount }, (_, index) => ({
+        id: index,
+        left: `${calculateLeft()}%`,
+        animationDuration: `${3 + Math.random() * 2}s`,
+        animationDelay: `${Math.random() * 2}s`,
+  
+      }));
+      setParticles(newParticles);
+    }
+    
+  }, [selectedCoin]);
   //console.log(particles)
 
   return (
@@ -53,7 +56,17 @@ const FreefallAnimation = () => {
          }}
        />
      ))}
-     </>:<div className=' mt-[120px] w-[100%] flex flex-col items-center bg-[red] justify-end'>
+     </>:<>
+     {selectedCoin?.type=='nft'?<div className=' mt-[120px] w-[100%] flex flex-col items-center bg-[red] justify-end'>
+     <img
+       src={selectedCoin?.image || Shitcoin?.src}
+         
+         className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-0 "
+       />
+      
+      
+      
+       </div>:<div className=' mt-[120px] w-[100%] flex flex-col items-center bg-[red] justify-end'>
      <img
        src={selectedCoin?.image || Shitcoin?.src}
          
@@ -84,7 +97,8 @@ const FreefallAnimation = () => {
          
          className="absolute w-[48px] h-[48px] border-[1px] border border-[#B8E6EE] rounded-full bg-white bottom-1 left-1"
        />
-       </div>} </>}
+       </div>}
+     </>} </>}
       
     </div>
   );

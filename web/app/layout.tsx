@@ -14,9 +14,9 @@ import ToasterComponent from '@/components/ui/ToasterComponent';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
-  image:'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7',
+  image:'https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/potential%20logo1.png?alt=media&token=588d2333-f23a-4ec7-a35b-e1de3ecc05a3',
   openGraph: {
-    images: 'https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7',
+    images: 'https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/potential%20logo1.png?alt=media&token=588d2333-f23a-4ec7-a35b-e1de3ecc05a3',
   },
 };
 
@@ -35,20 +35,20 @@ export default function RootLayout({
      
       <body suppressHydrationWarning={true}>
       <Head>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/potential%20logo1.png?alt=media&token=588d2333-f23a-4ec7-a35b-e1de3ecc05a3" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 <meta property="og:url" content="https://dumpfun.xyz"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Dump Fun"/>
 <meta property="og:description" content="A place where you dump your sh!t coins"/>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/potential%20logo1.png?alt=media&token=588d2333-f23a-4ec7-a35b-e1de3ecc05a3" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta property="twitter:domain" content="dumpfun.xyz"/>
 <meta property="twitter:url" content="https://dumpfun.xyz"/>
 <meta name="twitter:title" content="Dump Fun"/>
 <meta name="twitter:description" content="A place where you dump your sh!t coins"/>
-<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2F2024-09-08%2021.27.33.jpg?alt=media&token=e106efbc-7f41-42a6-82f6-a397c7d394c7" />
+<meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/dump-fun.appspot.com/o/potential%20logo1.png?alt=media&token=588d2333-f23a-4ec7-a35b-e1de3ecc05a3" />
 <meta name="description" content="A place where you dump your sh!t coins"/>
 </Head>
 <Script id="ms_clarity" type="text/javascript">

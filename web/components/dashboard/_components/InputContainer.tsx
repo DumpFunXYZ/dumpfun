@@ -35,7 +35,7 @@ export default function InputContainer({onHide}:any) {
             }} style={{lineHeight:'38px'}} className='text-[32px] bg-[transparent] flex items-center justify-center text-center min-w-[130px] semiBold text-[#B8E6EE]'/>
             <div className='flex flex-row justify-end min-w-[100px] items-center'>
             <p onClick={()=>{
-                setAmount(parseFloat(selectedCoin?.formatted?.toFixed(0)))
+                setAmount(parseFloat(selectedCoin?.formatted))
             }} style={{lineHeight:'24px'}} className='text-[17px]   regular text-[#B8E6EE]'>Max</p>
             </div>
         </div>
