@@ -60,6 +60,8 @@ export default function RootLayout({
         })(window, document, "clarity", "script", "o2xjrhl8cv");
         `}
         </Script>
+        
+        <Script id='debridgeWidgetScript' src='https://app.debridge.finance/assets/scripts/widget.js'/>
         <div className='status-bar'></div>
         <ReactQueryProvider>
           <ClusterProvider>

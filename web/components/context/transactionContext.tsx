@@ -138,36 +138,49 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           
           toast('⌛ Transaction Sent for Confirmation'); // Notify user of sent transaction
           
+          
 
           // Confirm the transaction with the blockchain
           await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed').then((res) => {
-            console.log('Tokens burned successfully');
-            setTimeout(() => {
-              setSuccess(true); // Mark the transaction as successful
-              setLoading(false); // Remove the loading state
-              toast('✅ Transaction Successful'); // Notify user of success
-              restoreData(); // Restore the account data after transaction
-              // Log the transaction details
-              addUserTransaction(
-                publicKey?.toString(),
-                signature?.toString(),
-                amount / 10 ** selectedCoin?.decimals, // Normalize token amount
-                (amount / 10 ** selectedCoin?.decimals) * ( usd || 0), // Value of the transaction in USD
-                selectedCoin?.name,
-                ( marketCap || 0), // Fully diluted valuation (FDV)
-                tokenMint?.toString(),
-                0
-              );
-            }, 500); 
-            addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),10)
-            //setEarnedPoints((amount / 10 ** selectedCoin?.decimals) * ( usd || 0)*10)
-            setEarnedPoints(10)
-            //console.log(signature);
-          setEarnedSolana(0)
-          // Call success function on successful transaction
-          if(soundOn){
-            successFunction();
-          }
+            //console.log('Tokens burned successfully');
+            connection.getTransaction(signature).then((transaction) => {
+              //console.log('Tx',transaction)
+              if (transaction && transaction.meta && transaction.meta.err) {
+                setLoading(false);
+                toast.error(`Transaction Failed onchain`)  
+                //console.log("Transaction failed:", transaction.meta.err);
+              } else if (transaction) {
+                setTimeout(() => {
+                  setSuccess(true); // Mark the transaction as successful
+                  setLoading(false); // Remove the loading state
+                  toast('✅ Transaction Successful'); // Notify user of success
+                  restoreData(); // Restore the account data after transaction
+                  // Log the transaction details
+                  addUserTransaction(
+                    publicKey?.toString(),
+                    signature?.toString(),
+                    amount / 10 ** selectedCoin?.decimals, // Normalize token amount
+                    (amount / 10 ** selectedCoin?.decimals) * ( usd || 0), // Value of the transaction in USD
+                    selectedCoin?.name,
+                    ( marketCap || 0), // Fully diluted valuation (FDV)
+                    tokenMint?.toString(),
+                    0
+                  );
+                }, 500); 
+                addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),10)
+                //setEarnedPoints((amount / 10 ** selectedCoin?.decimals) * ( usd || 0)*10)
+                setEarnedPoints(10)
+                //console.log(signature);
+              setEarnedSolana(0)
+              // Call success function on successful transaction
+              if(soundOn){
+                successFunction();
+              }
+              } else {
+                  console.log("Transaction not found.");
+              }
+          });
+
           
           }).catch((err)=>{
             setLoading(false); // Reset loading state if error occurs
@@ -238,42 +251,57 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                 'confirmed'
             )
             const balanceAfter = await connection.getBalance(publicKey);
-            console.log('Tokens burned and rent reclaimed successfully');
-            toast('✅ Transaction Successful');
-    
-            // Success handling
-            if(soundOn){
-              successFunction();
-            }
-           
-            setSuccess(true);
-            setLoading(false);
-    
-            // Fetch market data and log transaction details
             
-            setEarnedPoints(100)
-            const receivedSol = (balanceAfter - balanceBefore) / 1e9;
-            setEarnedSolana(receivedSol || earnedSolana)
-            addUserTransaction(
-                publicKey.toString(),
-                signature.toString(),
-                amount / 10 ** selectedCoin?.decimals,   // Normalize token amount
-                (amount / 10 ** selectedCoin?.decimals) * (usd || 0), // Value of the transaction in USD
-                selectedCoin?.name,
-                marketCap || 0,                          // Fully diluted valuation (FDV)
-                tokenMint.toString(),
-                receivedSol || earnedSolana
-            );
-           
-            addTrade(
-                publicKey.toString(),
-                (amount / 10 ** selectedCoin?.decimals) * (usd || 0),
-                liquidity || 0,
-                signature.toString(),
-                100
-            );
-    
-            restoreData(); // Restore account data
+            connection.getTransaction(signature).then((transaction) => {
+              //console.log('Tx',transaction)
+              if (transaction && transaction.meta && transaction.meta.err) {
+                setLoading(false);
+                toast.error(`Transaction Failed onchain`)  
+                //console.log("Transaction failed:", transaction.meta.err);
+              } else if (transaction) {
+                console.log('Tokens burned and rent reclaimed successfully');
+                toast('✅ Transaction Successful');
+        
+                // Success handling
+                if(soundOn){
+                  successFunction();
+                }
+               
+                setSuccess(true);
+                setLoading(false);
+        
+                // Fetch market data and log transaction details
+                
+                setEarnedPoints(100)
+                const receivedSol = (balanceAfter - balanceBefore) / 1e9;
+                setEarnedSolana(receivedSol || earnedSolana)
+                addUserTransaction(
+                    publicKey.toString(),
+                    signature.toString(),
+                    amount / 10 ** selectedCoin?.decimals,   // Normalize token amount
+                    (amount / 10 ** selectedCoin?.decimals) * (usd || 0), // Value of the transaction in USD
+                    selectedCoin?.name,
+                    marketCap || 0,                          // Fully diluted valuation (FDV)
+                    tokenMint.toString(),
+                    receivedSol || earnedSolana
+                );
+               
+                addTrade(
+                    publicKey.toString(),
+                    (amount / 10 ** selectedCoin?.decimals) * (usd || 0),
+                    liquidity || 0,
+                    signature.toString(),
+                    100
+                );
+        
+                restoreData(); 
+               
+              } else {
+                  console.log("Transaction not found.");
+              }
+          });
+            
+           // Restore account data
     
         } catch (error) {
             setLoading(false); // Reset loading state if error occurs
