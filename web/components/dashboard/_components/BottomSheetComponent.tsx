@@ -24,7 +24,7 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
   //console.log(coinData)
   return (
     <SwipeableBottomSheet
-      overflowHeight={60}
+      overflowHeight={20}
       open={isOpen}
       marginTop={120}
       fullScreen={true}
