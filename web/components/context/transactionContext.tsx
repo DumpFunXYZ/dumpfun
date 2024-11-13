@@ -252,8 +252,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             )
             const balanceAfter = await connection.getBalance(publicKey);
             
-            connection.getTransaction(signature).then((transaction) => {
-              //console.log('Tx',transaction)
+            await connection.getTransaction(signature).then((transaction) => {
+              console.log('Tx',transaction)
               if (transaction && transaction.meta && transaction.meta.err) {
                 setLoading(false);
                 toast.error(`Transaction Failed onchain`)  
@@ -293,6 +293,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     signature.toString(),
                     100
                 );
+                //setEarnedPoints(25)
         
                 restoreData(); 
                
@@ -322,7 +323,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       try {
           const tokenMint = new PublicKey(mintAddress); // Create a PublicKey object for the mint address
           setLoading(true);
-  
+          const balanceBefore = await connection.getBalance(publicKey);
           // Get the associated token account for the NFT
           const nftAccount = await getAssociatedTokenAddress(tokenMint, publicKey);
           //console.log('NFT Account',nftAccount)
@@ -351,38 +352,72 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           const signature = await sendTransaction(transaction, connection);
           console.log('⌛ Transaction Sent for Confirmation');
           toast('⌛ Transaction Sent for Confirmation');
-  
+          const balanceAfter = await connection.getBalance(publicKey);
+          await connection.getTransaction(signature).then((transaction) => {
+            
+            //console.log('Tx',transaction)
+            if (transaction && transaction.meta && transaction.meta.err) {
+              setLoading(false);
+              toast.error(`Transaction Failed onchain`)  
+              
+              //console.log("Transaction failed:", transaction.meta.err);
+            } else if (transaction) {
+              
+              console.log('Tokens burned and rent reclaimed successfully');
+              toast('✅ Transaction Successful');
+      
+              // Success handling
+              if(soundOn){
+                successFunction();
+              }
+             
+              addUserNFTTransaction(
+                publicKey.toString(),
+                signature.toString(),
+                1,   // Normalize token amount
+                0, // Value of the transaction in USD
+                selectedCoin?.name,
+                0,                          // Fully diluted valuation (FDV)
+                tokenMint.toString(),
+                0.00204
+            );
+           
+            addTrade(
+                publicKey.toString(),
+                0,
+                0 || 0,
+                signature.toString(),
+                25
+            );
+              console.log('NFT burned and rent reclaimed successfully');
+              toast('✅ NFT Burnt');
+              
+              // Call success function on successful transaction
+              successFunction();
+              
+              setSuccess(true);
+              setLoading(false);
+      
+              // Fetch market data and log transaction details
+              const receivedSol = (balanceAfter - balanceBefore) / 1e9;
+              setEarnedSolana(receivedSol || earnedSolana)
+              setEarnedPoints(25)
+              //setEarnedSolana(receivedSol)
+             
+              //setEarnedPoints(25)
+      
+              restoreData(); 
+             
+            } else {
+              setLoading(false);
+              toast.error(`Transaction Failed onchain`)  
+                console.log("Transaction not found.");
+            }
+        });
+
           // Confirm transaction with the blockchain
-          await connection.confirmTransaction(
-              { signature, blockhash, lastValidBlockHeight },
-              'confirmed'
-          );
-          addUserNFTTransaction(
-            publicKey.toString(),
-            signature.toString(),
-            1,   // Normalize token amount
-            0, // Value of the transaction in USD
-            selectedCoin?.name,
-            0,                          // Fully diluted valuation (FDV)
-            tokenMint.toString(),
-            0.00204
-        );
-       
-        addTrade(
-            publicKey.toString(),
-            0,
-            0 || 0,
-            signature.toString(),
-            100
-        );
-          console.log('NFT burned and rent reclaimed successfully');
-          toast('✅ NFT Burned and Rent Reclaimed Successfully');
           
-          // Call success function on successful transaction
-          successFunction();
-          
-          setSuccess(true);
-          setLoading(false);
+         
       } catch (error) {
           setLoading(false);
           toast('❌ Transaction Failed or Low Solana Balance');
