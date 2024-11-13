@@ -8,12 +8,15 @@ import { TOKEN_PROGRAM_ID, burn, getOrCreateAssociatedTokenAccount, getAssociate
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { BlockheightBasedTransactionConfirmationStrategy, clusterApiUrl, Connection, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
 import axios from 'axios';
+import { ethers } from 'ethers';
 
 //import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'; // Library to display toast notifications
+import { useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi';
 //import { useGetBalance } from '../account/account-data-access'; // Import custom hook to get balance data
 import { useAccountContext } from './accountContext'; // Import context for account data
+import { useGlobalContext } from './globalContext';
 
 // Create a new context to manage transaction states
 const TransactionContext = createContext({});
@@ -31,6 +34,12 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [earnedSolana,setEarnedSolana]=useState(0.0016)
     const [success, setSuccess] = useState(false); // Manage success state of the transaction
     const [soundOn,setSoundOn]=useState(true);
+    const {accountType}:any=useGlobalContext();
+    const provider=useProvider();
+    const {data:signer}:any=useSigner();
+    const { switchNetworkAsync, isSuccess, isLoading, isError } =
+    useSwitchNetwork();
+    const { chain } = useNetwork();
 
     // Function to handle when user enters a number for the amount to burn
     const numberEntered = () => {
@@ -81,20 +90,25 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const onDumpClicked = (successFunction: any) => {
         setAnimationDone(false);
         setAnimationStarted(false);
-        if(selectedCoin?.type=='nft'){
-          burnNFTWithRent(selectedCoin?.id, successFunction);
-        }
-        else{
-          if(amount === selectedCoin?.formatted){
-           
-              burnTokenWithRent(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
-            
-            
+        if(accountType=='Solana'){
+          if(selectedCoin?.type=='nft'){
+            burnNFTWithRent(selectedCoin?.id, successFunction);
           }
           else{
-            burnToken(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+            if(amount === selectedCoin?.formatted){
+             
+                burnTokenWithRent(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+              
+              
+            }
+            else{
+              burnToken(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+            }
           }
+        }else{
+          burnBaseToken();
         }
+        
         // Call the function to burn the selected tokens
         
        
@@ -398,6 +412,47 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             }, 3000);
         }
     }, [animationStarted]);
+
+    const burnBaseToken=async()=>{
+      if (!signer) {
+        console.error('Signer is not available');
+        return;
+      }
+
+
+
+      if (chain?.id !== 8453) {
+        await switchNetworkAsync?.(8453).catch((err) => {
+          toast(`Please switch to Base mainnet manually`);
+          return
+        });
+      } 
+    
+      // Create an instance of the ERC20 contract
+      const tokenContract = new ethers.Contract(
+        selectedCoin?.id,
+        [
+          // ABI of the burn function
+          "function burn(uint256 amount) public returns (bool)"
+        ],
+        signer
+      );
+    
+      try {
+        // Convert the burn amount to the appropriate decimals
+        const amounts = ethers.utils.parseUnits(amount?.toString(), selectedCoin?.decimals); // Adjust 18 if your token uses different decimals
+    
+        // Call the burn function
+        const tx = await tokenContract.burn(amounts);
+        console.log('Burn transaction submitted:', tx.hash);
+    
+        // Wait for the transaction to be mined
+        const receipt = await tx.wait();
+        console.log('Burn transaction confirmed:', receipt);
+      } catch (error) {
+        console.error('Error burning tokens:', error);
+      }
+    }
 
   return (
     <Provider value={{ loading, numberEntered, animationDone, onDumpClicked, animationStarted, success, setSuccess,earnedPoints,earnedSolana,soundOn,setSoundOn }} {...props}>

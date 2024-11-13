@@ -3,6 +3,7 @@ import { addUserIfNotExists } from "@/utils/authUtils"; // Importing utility fun
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
 import axios from "axios"; // Axios for making API requests
 import React, { createContext, useContext, useEffect, useState } from "react"; // React utilities for context and hooks
+import { useGlobalContext } from "./globalContext";
 
 // Create a new context for account-related data
 const AccountContext = createContext({});
@@ -13,7 +14,7 @@ const KEY = process.env.HELIUS_KEY || 'e66be7c4-a831-411f-85db-e490ba3713e5';
 
 // AccountProvider component to wrap the application with account management logic
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
-  const { publicKey } = useWallet(); // Get the connected wallet's public key from Solana wallet adapter
+  const { walletAddress,accountType }:any = useGlobalContext(); // Get the connected wallet's public key from Solana wallet adapter
   const [AccountData, setAccountData] = useState(null); // State to store account-related data (currently unused)
   const [coinData, setCoinData] = useState([]); // State to store the list of user's tokens
   const [nftData,setNftData]=useState([]);
@@ -50,13 +51,13 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   };
 
   // Function to fetch the user's token data using Helius API
-  const fetchCoinData = async (publicKey: string) => {
+  const fetchCoinData = async (walletAddress: string) => {
     await axios.post(`https://mainnet.helius-rpc.com/?api-key=${KEY}`, {
       "jsonrpc": "2.0",
       "id": "text",
       "method": "getAssetsByOwner",
       "params": {
-        "ownerAddress": publicKey,
+        "ownerAddress": walletAddress,
         "options": {
           "showFungible": true // We are only interested in fungible tokens
         }
@@ -113,19 +114,54 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
       setNftData(sortedNFTs); 
     });
   };
+  const fetchCoinDataEvm = async (walletAddress: string) => {
+    await axios.get(`https://deep-index.moralis.io/api/v2.2/wallets/${walletAddress}/tokens?chain=base&exclude_native=true`,{
+      headers:{
+        'X-API-KEY':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjM2NjEzZmE2LWQ2NGEtNDdjYy05ZmJiLTA0MzMyMWQyZWE3ZSIsIm9yZ0lkIjoiMjAxODc0IiwidXNlcklkIjoiMjAxNTQ3IiwidHlwZUlkIjoiY2M2MDU4NTYtYWUwYy00ODM5LWI2MmEtNmZkNTMxYjkzYjM5IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODI5NDE2MzYsImV4cCI6NDgzODcwMTYzNn0.BERwErffJQAJVdkfz3xD5Sgi71f5qCBAzUj3JafWxPQ"
+      }
+    }).then((res) => {
+      const tokens = res.data.result;
+      //console.log(nftFilter)
+
+      // Process the filtered tokens to extract relevant data
+      let sortedToken: any = [];
+      for (var i = 0; i < tokens.length; i++) {
+        let tk = tokens?.[i];
+        let tokenData = {
+          id: tk?.token_address,
+          name: tk?.name,
+          symbol: tk?.symbol,
+          image: tk?.logo || tk?.thumbnail,
+          balance: tk?.balance,
+          formatted: tk?.balance / 10 ** tk?.decimals, // Format balance with decimals
+          tokenProgram: tk?.token_address,
+          address: tk?.token_address,
+          decimals: tk?.decimals
+        };
+        sortedToken?.push(tokenData); // Push each token data into the sortedToken array
+      }
+      setCoinData(sortedToken); // Update state with the sorted tokens
+    });
+  };
 
   // useEffect hook to fetch token data when the public key changes
   useEffect(() => {
-    if (publicKey) {
-      fetchCoinData(publicKey?.toString()); // Fetch token data
-      addUserIfNotExists(publicKey?.toString()); // Ensure the user exists in your system
+    if (walletAddress) {
+      if(accountType=='Solana'){
+        fetchCoinData(walletAddress?.toString()); 
+      }
+      else{
+        fetchCoinDataEvm(walletAddress?.toString())
+      }
+      // Fetch token data
+      addUserIfNotExists(walletAddress?.toString()); // Ensure the user exists in your system
     }
-  }, [publicKey]);
+  }, [walletAddress]);
 
   // Restore data to initial state (reset selected token and amount)
   const restoreData = () => {
-    if (publicKey) {
-      fetchCoinData(publicKey?.toString()); // Re-fetch token data
+    if (walletAddress) {
+      fetchCoinData(walletAddress?.toString()); // Re-fetch token data
       setBurntToken({...selectedCoin,amount:amount});
       setSelectedCoin(null); // Reset selected token
       setAmount(0); // Reset amount

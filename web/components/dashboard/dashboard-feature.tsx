@@ -11,6 +11,7 @@ import { useTransactionContext } from '../context/transactionContext';
 import { SuccessSheet } from './_components/SuccessSheet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Loading from './_components/Loading';
+import { useGlobalContext } from '../context/globalContext';
 
 
 export default function Dashboard() {
@@ -18,7 +19,7 @@ export default function Dashboard() {
   const [visible,setVisible]=useState(false);
   const [loaded,setLoaded]=useState(false);
   const {success,setSuccess,loading}:any=useTransactionContext();
-  const {publicKey}:any=useWallet()
+  const {walletAddress}:any=useGlobalContext()
 
   return (
     <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col items-center justify-center">
@@ -40,7 +41,7 @@ export default function Dashboard() {
           <img src={ToiletSeat.src} className={'h-[100%] scale-x-110'} />
         </div>
        {open && <BottomSheetComponent isOpen={open} setIsOpen={setOpen}/>}
-        {publicKey && <BottomButton onClick={()=>{
+        {walletAddress && <BottomButton onClick={()=>{
            setOpen(true)
           
         }}/>}
