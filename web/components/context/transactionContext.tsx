@@ -141,7 +141,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           
 
           // Confirm the transaction with the blockchain
-          await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed').then((res) => {
+          await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'finalized').then((res) => {
             //console.log('Tokens burned successfully');
             connection.getTransaction(signature).then((transaction) => {
               //console.log('Tx',transaction)
@@ -248,7 +248,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             // Confirm the transaction with the blockchain
             await connection.confirmTransaction(
                 { signature, blockhash, lastValidBlockHeight },
-                'confirmed'
+                'finalized'
             )
             const balanceAfter = await connection.getBalance(publicKey);
             

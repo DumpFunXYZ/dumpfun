@@ -11,6 +11,7 @@ import { useTransactionContext } from '../context/transactionContext';
 import { SuccessSheet } from './_components/SuccessSheet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Loading from './_components/Loading';
+import { WalletButton } from '../solana/solana-provider';
 
 
 export default function Dashboard() {
@@ -29,7 +30,12 @@ export default function Dashboard() {
         </div>
         <NavBar/>
         <div className='w-[100%] h-[75%] mt-[110px] flex items-center  justify-center relative'>
-          <DumpButton/>
+        <DumpButton/>
+          {publicKey? <></>:
+          <div className='opacity-0 z-10 top-0 absolute'>
+              <WalletButton />
+            </div>}
+         
           <div className='w-[100%] h-[80%] absolute  -top-10 flex flex-col items-center justify-start'>
         
           

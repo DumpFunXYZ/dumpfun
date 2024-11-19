@@ -39,7 +39,7 @@ const router =useRouter();
             <div className='opacity-0 scale-x-50 absolute'>
               <DisconnectButton />
             </div>
-          </div> : <div className="flex-none space-x-2 relative animate-slide-in-right">
+          </div> : <div className="flex-none bg-[#00191D] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative animate-slide-in-right">
            <div className='fontBold text-[17px] bold text-[#B8E6EE]'>Connect</div>
             <div className='opacity-0 absolute'>
               <WalletButton />
