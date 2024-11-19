@@ -248,3 +248,15 @@ background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
 .animate-fall {
   will-change: transform, opacity;
 }
+
+.customOverlay {
+  background: rgba(36, 123, 160, 0.7);
+}
+.customModal {
+ 
+  max-width: 300px;
+  width: 300px;
+  height: 300px;
+  border-radius: 32px;
+
+}

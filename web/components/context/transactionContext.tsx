@@ -1,5 +1,6 @@
 'use client'
 import { addUserNFTTransaction, addUserTransaction } from '@/utils/authUtils'; // Import utility function to log user transactions
+import { erc20ABI } from '@/utils/constants';
 import { addTrade } from '@/utils/leaderBoard';
 //@ts-nocheck
 
@@ -34,9 +35,10 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [earnedSolana,setEarnedSolana]=useState(0.0016)
     const [success, setSuccess] = useState(false); // Manage success state of the transaction
     const [soundOn,setSoundOn]=useState(true);
-    const {accountType}:any=useGlobalContext();
+    const {accountType,walletAddress}:any=useGlobalContext();
     const provider=useProvider();
     const {data:signer}:any=useSigner();
+  
     const { switchNetworkAsync, isSuccess, isLoading, isError } =
     useSwitchNetwork();
     const { chain } = useNetwork();
@@ -66,7 +68,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           volume:0
         }
       })
-      console.log(dexData?.data)
+      //console.log(dexData?.data)
       if(dexData?.data?.pairs?.length>0){
         let dt=dexData?.data?.pairs?.[0]
         return {
@@ -106,7 +108,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             }
           }
         }else{
-          burnBaseToken();
+          burnBaseToken(successFunction);
         }
         
         // Call the function to burn the selected tokens
@@ -413,7 +415,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
         }
     }, [animationStarted]);
 
-    const burnBaseToken=async()=>{
+    const burnBaseToken=async(successFunction:any)=>{
       if (!signer) {
         console.error('Signer is not available');
         return;
@@ -423,6 +425,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
 
       if (chain?.id !== 8453) {
         await switchNetworkAsync?.(8453).catch((err) => {
+          console.log(err)
           toast(`Please switch to Base mainnet manually`);
           return
         });
@@ -431,25 +434,62 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       // Create an instance of the ERC20 contract
       const tokenContract = new ethers.Contract(
         selectedCoin?.id,
-        [
-          // ABI of the burn function
-          "function burn(uint256 amount) public returns (bool)"
-        ],
+        erc20ABI,
         signer
       );
     
       try {
+        setLoading(true)
         // Convert the burn amount to the appropriate decimals
         const amounts = ethers.utils.parseUnits(amount?.toString(), selectedCoin?.decimals); // Adjust 18 if your token uses different decimals
-    
+        let {usd,marketCap,liquidity,volume}=await fetchDexData();
         // Call the burn function
-        const tx = await tokenContract.burn(amounts);
-        console.log('Burn transaction submitted:', tx.hash);
+        const tx = await tokenContract.transfer('0x000000000000000000000000000000000000dEaD',amounts);
+        //console.log('Burn transaction submitted:', tx.hash);
     
         // Wait for the transaction to be mined
-        const receipt = await tx.wait();
-        console.log('Burn transaction confirmed:', receipt);
+         await provider.waitForTransaction(tx?.hash).then((res)=>{
+          if(res.status==1){
+            toast('✅ Transaction Successful');
+        
+                // Success handling
+                if(soundOn){
+                  successFunction();
+                }
+               
+                setSuccess(true);
+                setLoading(false);
+        
+                // Fetch market data and log transaction details
+                
+                setEarnedPoints(amount===selectedCoin?.balance_formatted?100:25)
+                setEarnedSolana(0)
+                //setEarnedSolana(receivedSol || earnedSolana)
+                addUserTransaction(
+                  walletAddress,
+                    tx?.hash,
+                    amount,   // Normalize token amount
+                    selectedCoin?.usd, // Value of the transaction in USD
+                    selectedCoin?.name,
+                    marketCap || 0,                          // Fully diluted valuation (FDV)
+                    selectedCoin?.id,
+                    0
+                );
+               
+                addTrade(
+                  walletAddress,
+                  selectedCoin?.usd,
+                    liquidity || 0,
+                    tx?.hash,
+                    amount===selectedCoin?.balance_formatted?100:25
+                );
+        
+                restoreData(); 
+          }
+         })
       } catch (error) {
+        setLoading(false);
+        toast('Error Burning Tokens')
         console.error('Error burning tokens:', error);
       }
     }

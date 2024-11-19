@@ -1,5 +1,6 @@
 import { firestore } from './firebase'; // Import Firestore from your Firebase setup
 import { collection, doc, getDoc, setDoc, updateDoc, arrayUnion, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { ethers } from 'ethers';
 
 // Constants
 const POINTS_PER_TRADE = 100; // Define the reward rate: $10 trade gives 100 points
@@ -37,6 +38,7 @@ export async function addTrade(walletAddress:string, tradeAmount:number,liquidit
                 amount: tradeAmount,
                 points: points,
                 hash:hash,
+                chain:ethers.utils.isAddress(walletAddress)?'base':'solana',
                 timestamp: new Date(), // Record the trade timestamp
             }),
         });

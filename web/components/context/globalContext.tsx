@@ -19,6 +19,7 @@ const GlobalProvider = ({ children, ...props }: {children: React.ReactNode}) => 
     const [accountType,setAccountType]:any=useState(null)
     
     useEffect(()=>{
+      console.log(address)
         if(publicKey){
             setWalletAddress(publicKey?.toString())
             setAccountType('Solana')

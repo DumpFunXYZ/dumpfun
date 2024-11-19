@@ -136,7 +136,9 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
           formatted: tk?.balance / 10 ** tk?.decimals, // Format balance with decimals
           tokenProgram: tk?.token_address,
           address: tk?.token_address,
-          decimals: tk?.decimals
+          decimals: tk?.decimals,
+          usd:tk?.usd_value,
+          usd_price:tk?.usd_price
         };
         sortedToken?.push(tokenData); // Push each token data into the sortedToken array
       }

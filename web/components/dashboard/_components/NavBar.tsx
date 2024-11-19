@@ -1,18 +1,22 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import settings from '../../../app/assets/settings.svg';
 import on from '../../../app/assets/soundOn.svg';
 import off from '../../../app/assets/soundOff.svg';
 import { WalletButton,DisconnectButton } from '@/components/solana/solana-provider';
-import { useWallet } from '@solana/wallet-adapter-react';
+
 import { useRouter } from 'next/navigation';
 import { useTransactionContext } from '@/components/context/transactionContext';
-import { Web3Button } from '@web3modal/react';
+import { Web3Button, } from '@web3modal/react';
 import { useGlobalContext } from '@/components/context/globalContext';
+import Popup from './AlertPopup';
+import { useDisconnect } from 'wagmi';
 
 export default function NavBar() {
-  const {walletAddress}:any=useGlobalContext();
+  const {walletAddress,accountType}:any=useGlobalContext();
   const {soundOn,setSoundOn}:any=useTransactionContext()
+  const [open,setOpen]:any=useState(false)
+  const { disconnect } = useDisconnect()
   function inIframe () {
     try {
         return window.self !== window.top;
@@ -37,17 +41,30 @@ const router =useRouter();
             <p className='fontBold text-[22px] bold text-[#B8E6EE]'>4.1B</p>
           </button>
           {walletAddress? <div className="flex-none space-x-2 relative animate-slide-in-right">
-           <div className='fontBold text-[17px] bold text-[#B8E6EE]'>Disconnect</div>
-            <div className='opacity-0 scale-x-50 absolute'>
-              <DisconnectButton />
-            </div>
+           <button onClick={()=>{
+             //disconnect();
+             localStorage.clear();
+             window.location.reload()
+           }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Disconnect</button>
+            
           </div> : <div className="flex-none space-x-2 relative animate-slide-in-right">
+           <button onClick={()=>{
+            setOpen(true)
+           }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Connect</button>
+            <div className='opacity-0 absolute'>
+              {/* <Web3Button /> */}
+            </div>
+          </div>}
+         <Popup  isOpen={open} onClose={()=>{
+          setOpen(false)
+         }}>
+          <div className="flex-none space-x-2 relative animate-slide-in-right">
            <div className='fontBold text-[17px] bold text-[#B8E6EE]'>Connect</div>
             <div className='opacity-0 absolute'>
               <Web3Button />
             </div>
-          </div>}
-         
+          </div>
+         </Popup>
         </div>
   )
 }

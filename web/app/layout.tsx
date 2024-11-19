@@ -21,6 +21,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import ToasterComponent from '@/components/ui/ToasterComponent';
 import { GlobalProvider } from '@/components/context/globalContext';
+import { base } from '@/utils/constants';
 // export const metadata = {
 //   title: 'Dump Fun',
 //   description: 'A place where you dump your sh!t coins',
@@ -42,9 +43,10 @@ export default function RootLayout({
 }) {
   let projectId='892fc3740cf9887e8ba7a6cd17b6d45e'
   const chains: any = [
+    base,
     mainnet,
     polygon,
-   
+    
   ];
   {
     /*@ts-ignore */

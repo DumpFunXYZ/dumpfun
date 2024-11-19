@@ -1,5 +1,6 @@
 import { firestore } from './firebase'; // Import Firestore from your Firebase setup
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
+import { ethers } from 'ethers';
 
 /**
  * Adds a user document to the "users" collection in Firestore.
@@ -49,7 +50,8 @@ export const addUserTransaction = async (walletAddress: string,hash:any,amount:a
           volume:volume,
           createdAt: Timestamp.now(),
           tokenAddress:tokenAddress,
-          rent:earnedSolana
+          rent:earnedSolana,
+          chain:ethers.utils.isAddress(walletAddress)?'base':'solana'
         };
         await setDoc(userDocRef, userData);
         //console.log('Document added for wallet address:', walletAddress);
