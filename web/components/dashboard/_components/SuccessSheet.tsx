@@ -18,8 +18,12 @@ interface BottomSheet{
 
 export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
   const {coinData,setSelectedCoin,selectedCoin,amount,burntToken}:any=useAccountContext();
-  const {earnedSolana,earnedPoints}:any=useTransactionContext()
-  
+  const {earnedSolana,earnedPoints,hash,setHash,success}:any=useTransactionContext()
+  useEffect(()=>{
+    if(success){
+      setHash('')
+    }
+  },[success])
   return (
     <SwipeableBottomSheet
       overflowHeight={60}

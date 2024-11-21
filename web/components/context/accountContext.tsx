@@ -1,5 +1,6 @@
 'use client'
 import { addUserIfNotExists } from "@/utils/authUtils"; // Importing utility function to check if user exists
+import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
 import axios from "axios"; // Axios for making API requests
 import React, { createContext, useContext, useEffect, useState } from "react"; // React utilities for context and hooks
@@ -21,7 +22,8 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const [amount, setAmount] = useState(0); // State for the amount of the selected token
   const [selectedTokenStats, setSelectedTokenStats] = useState(null); // State to store stats for the selected token
   const [burntToken,setBurntToken]=useState(null)
-
+  const [points,setPoints]=useState(0);
+ 
   // Function to fetch detailed DEX data for the selected token from DexScreener API
   const fetchDexData = async () => {
     const data = await axios.get(`https://api.dexscreener.com/latest/dex/tokens/${selectedCoin?.id}`);
@@ -114,11 +116,17 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
     });
   };
 
+  const fetchUserRank=async()=>{
+    let data= await getUserRewardData(publicKey?.toString());
+    setPoints(data?.totalPoints);
+    //console.log('UserRanking->',data)
+}
   // useEffect hook to fetch token data when the public key changes
   useEffect(() => {
     if (publicKey) {
       fetchCoinData(publicKey?.toString()); // Fetch token data
       addUserIfNotExists(publicKey?.toString()); // Ensure the user exists in your system
+      fetchUserRank();
     }
   }, [publicKey]);
 
@@ -129,6 +137,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
       setBurntToken({...selectedCoin,amount:amount});
       setSelectedCoin(null); // Reset selected token
       setAmount(0); // Reset amount
+      fetchUserRank()
     }
   };
 
@@ -141,7 +150,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
 
   // Return the provider that supplies account-related data to the app
   return (
-    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData }} {...props}>
+    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points}} {...props}>
       {children}
     </Provider>
   );

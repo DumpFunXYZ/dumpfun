@@ -31,7 +31,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [earnedSolana,setEarnedSolana]=useState(0.0016)
     const [success, setSuccess] = useState(false); // Manage success state of the transaction
     const [soundOn,setSoundOn]=useState(true);
-
+    const [hash,setHash]=useState('')
+    //const [progress,setProgress]:any=useState(false);
     // Function to handle when user enters a number for the amount to burn
     const numberEntered = () => {
       if(amount>0){
@@ -135,7 +136,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
 
           const { context: { slot: minContextSlot }, value: { blockhash, lastValidBlockHeight } } = await connection.getLatestBlockhashAndContext();
 
-          
+          setHash(signature)          
           toast('⌛ Transaction Sent for Confirmation'); // Notify user of sent transaction
           
           
@@ -184,7 +185,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           
           }).catch((err)=>{
             setLoading(false); // Reset loading state if error occurs
-            toast('❌ Transaction Failed or Low Solana Balance'); // Notify user of failure
+            toast(`❌ ${err}`); 
             console.error('Error burning tokens:', err); 
           })
 
@@ -193,7 +194,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
 
         } catch (error) {
           setLoading(false); // Reset loading state if error occurs
-          toast('❌ Transaction Failed or Low Solana Balance'); // Notify user of failure
+          toast(`❌ ${error}`); 
           console.error('Error burning tokens:', error); // Log the error details
         }
       };
@@ -244,7 +245,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             const signature = await sendTransaction(transaction, connection);
             console.log('⌛ Transaction Sent for Confirmation');
             toast('⌛ Transaction Sent for Confirmation');
-    
+            setHash(signature)       
             // Confirm the transaction with the blockchain
             await connection.confirmTransaction(
                 { signature, blockhash, lastValidBlockHeight },
@@ -306,8 +307,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     
         } catch (error) {
             setLoading(false); // Reset loading state if error occurs
-            toast('❌ Transaction Failed or Low Solana Balance'); // Notify user of failure
-            console.error('Error burning tokens:', error); // Log the error details
+            toast(`❌ ${error}`); // Notify user of failure
+            //console.error('Error burning tokens:', JSON.stringify(error,null,2)); // Log the error details
         }
     };
 
@@ -352,6 +353,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           const signature = await sendTransaction(transaction, connection);
           console.log('⌛ Transaction Sent for Confirmation');
           toast('⌛ Transaction Sent for Confirmation');
+          setHash(signature)
           const balanceAfter = await connection.getBalance(publicKey);
           await connection.getTransaction(signature).then((transaction) => {
             
@@ -420,7 +422,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
          
       } catch (error) {
           setLoading(false);
-          toast('❌ Transaction Failed or Low Solana Balance');
+          toast(`❌ ${error}`); 
           console.error('Error burning NFT:', error);
       }
   };
@@ -435,7 +437,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     }, [animationStarted]);
 
   return (
-    <Provider value={{ loading, numberEntered, animationDone, onDumpClicked, animationStarted, success, setSuccess,earnedPoints,earnedSolana,soundOn,setSoundOn }} {...props}>
+    <Provider value={{ loading, numberEntered, animationDone, onDumpClicked, animationStarted, success, setSuccess,earnedPoints,earnedSolana,soundOn,setSoundOn,setLoading,hash,setHash }} {...props}>
       {children}
     </Provider>
   );

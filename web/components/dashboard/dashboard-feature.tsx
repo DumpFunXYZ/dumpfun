@@ -12,13 +12,14 @@ import { SuccessSheet } from './_components/SuccessSheet';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Loading from './_components/Loading';
 import { WalletButton } from '../solana/solana-provider';
+import { TransactionProgress } from './_components/TransactionProgress';
 
 
 export default function Dashboard() {
   const [open,setOpen]=useState(false)
   const [visible,setVisible]=useState(false);
   const [loaded,setLoaded]=useState(false);
-  const {success,setSuccess,loading}:any=useTransactionContext();
+  const {success,setSuccess,loading,setLoading}:any=useTransactionContext();
   const {publicKey}:any=useWallet()
 
   return (
@@ -30,7 +31,9 @@ export default function Dashboard() {
         </div>
         <NavBar/>
         <div className='w-[100%] h-[75%] mt-[110px] flex items-center  justify-center relative'>
-        <DumpButton/>
+        <DumpButton onDefaultClick={()=>{
+setOpen(true)
+        }}/>
           {publicKey? <></>:
           <div className='opacity-0 z-10 top-0 absolute'>
               <WalletButton />
@@ -52,7 +55,8 @@ export default function Dashboard() {
         }}/>}
         
         {success && <SuccessSheet isOpen={success} setIsOpen={setSuccess}/>}
-        {loading && <Loading/>}
+        {loading && <TransactionProgress isOpen={loading} setIsOpen={setLoading}/>}
+        
       </div>:<Launch setLoaded={setLoaded}/>}
       
       
