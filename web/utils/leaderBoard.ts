@@ -1,5 +1,5 @@
 import { firestore } from './firebase'; // Import Firestore from your Firebase setup
-import { collection, doc, getDoc, setDoc, updateDoc, arrayUnion, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc, arrayUnion, getDocs, query, orderBy, limit, increment } from 'firebase/firestore';
 
 // Constants
 const POINTS_PER_TRADE = 100; // Define the reward rate: $10 trade gives 100 points
@@ -123,3 +123,23 @@ export async function getUserRewardData(walletAddress:string | undefined) {
         return null;
     }
 }
+
+export const updateStats = async (newSolanaRent:any,newTotalCoins:any,newUsdVolume:any) => {
+    // Reference to the document
+    const docRef = doc(firestore, "stats", "solanaRent");
+    //const docSnap = await getDoc(docRef);
+    //console.log(docSnap.data())
+    //console.log(typeof(newSolanaRent),typeof(newTotalCoins),typeof(newUsdVolume))
+    //console.log('Ref',docRef)
+    try {
+      // Update document using increment
+      await updateDoc(docRef, {
+        solanaRent: increment(newSolanaRent),
+        totalCoins: increment(newTotalCoins),
+        usdVolume: increment(newUsdVolume)
+      });
+      console.log("Document updated successfully!");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };

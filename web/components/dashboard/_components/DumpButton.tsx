@@ -17,9 +17,11 @@ export function DumpButton({onDefaultClick}:any) {
     <div style={{zIndex:!selectedCoin?10:animationDone?10:1}} className='absolute -top-6'>
     <button
     onClick={()=>{
+
       if(!selectedCoin){
         toast('Choose a Shitcoin')
         onDefaultClick()
+        
         //setInputMode(true)
       }
       else{

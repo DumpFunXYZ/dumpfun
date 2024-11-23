@@ -1,6 +1,7 @@
 'use client'
 import { addUserNFTTransaction, addUserTransaction } from '@/utils/authUtils'; // Import utility function to log user transactions
-import { addTrade } from '@/utils/leaderBoard';
+import { firestore } from '@/utils/firebase';
+import { addTrade, updateStats } from '@/utils/leaderBoard';
 //@ts-nocheck
 
 // Import necessary modules from Solana SPL Token and Web3 libraries
@@ -8,6 +9,7 @@ import { TOKEN_PROGRAM_ID, burn, getOrCreateAssociatedTokenAccount, getAssociate
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { BlockheightBasedTransactionConfirmationStrategy, clusterApiUrl, Connection, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
 import axios from 'axios';
+import { doc, getDoc, increment, updateDoc } from 'firebase/firestore';
 
 //import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -144,7 +146,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           // Confirm the transaction with the blockchain
           await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'finalized').then((res) => {
             //console.log('Tokens burned successfully');
-            connection.getTransaction(signature).then((transaction) => {
+            connection.getTransaction(signature).then(async(transaction) => {
               //console.log('Tx',transaction)
               if (transaction && transaction.meta && transaction.meta.err) {
                 setLoading(false);
@@ -155,7 +157,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                   setSuccess(true); // Mark the transaction as successful
                   setLoading(false); // Remove the loading state
                   toast('✅ Transaction Successful'); // Notify user of success
-                  restoreData(); // Restore the account data after transaction
+                  // Restore the account data after transaction
                   // Log the transaction details
                   addUserTransaction(
                     publicKey?.toString(),
@@ -167,12 +169,15 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     tokenMint?.toString(),
                     0
                   );
-                }, 500); 
+                }, 0); 
+                await updateStats(0, amount / 10 ** selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),)
                 addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),10)
                 //setEarnedPoints((amount / 10 ** selectedCoin?.decimals) * ( usd || 0)*10)
                 setEarnedPoints(10)
+                
                 //console.log(signature);
-              setEarnedSolana(0)
+                setEarnedSolana(0)
+                restoreData(); 
               // Call success function on successful transaction
               if(soundOn){
                 successFunction();
@@ -253,7 +258,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             )
             const balanceAfter = await connection.getBalance(publicKey);
             
-            await connection.getTransaction(signature).then((transaction) => {
+            await connection.getTransaction(signature).then(async(transaction) => {
               console.log('Tx',transaction)
               if (transaction && transaction.meta && transaction.meta.err) {
                 setLoading(false);
@@ -286,6 +291,8 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     tokenMint.toString(),
                     receivedSol || earnedSolana
                 );
+
+                await updateStats(receivedSol || earnedSolana,amount/10**selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * (usd || 0))
                
                 addTrade(
                     publicKey.toString(),
@@ -426,6 +433,10 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           console.error('Error burning NFT:', error);
       }
   };
+
+
+
+  
 
     // Effect to trigger animation when token dump starts
     useEffect(() => {
