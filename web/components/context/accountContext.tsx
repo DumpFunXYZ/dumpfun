@@ -2,6 +2,7 @@
 import { addUserIfNotExists } from "@/utils/authUtils"; // Importing utility function to check if user exists
 import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
+import { PublicKey } from "@solana/web3.js";
 import axios from "axios"; // Axios for making API requests
 import React, { createContext, useContext, useEffect, useState } from "react"; // React utilities for context and hooks
 import { useAccount } from "wagmi";
@@ -81,9 +82,13 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
       }
     }).then((res) => {
       const tokens = res.data.result?.items;
-      let filter = [...tokens].filter((item, index) => {
+      let tokenDatas = [...tokens].filter((item, index) => {
         return item?.interface === 'FungibleToken'; // Filter out only fungible tokens
       });
+      let filter= tokenDatas?.sort((a,b)=>{
+        return (a?.token_info?.price_info?.total_price || 0)-(b?.token_info?.price_info?.total_price || 0)
+      })
+      //console.log('Filter',filter);
 
       const nftFilter=[...tokens].filter((item, index) => {
         return item?.interface !== 'FungibleToken' && item?.token_info?.supply>0; // Filter out only fungible tokens
