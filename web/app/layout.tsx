@@ -6,11 +6,11 @@ import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
 import { AccountProvider } from '@/components/context/accountContext';
 import { TransactionProvider } from '@/components/context/transactionContext';
-import { Toaster } from 'react-hot-toast';
-import mixpanel from "mixpanel-browser";
+
 import Head from 'next/head';
 import Script from 'next/script';
 import ToasterComponent from '@/components/ui/ToasterComponent';
+import { WagmiProvider } from '@/components/provider/WagmiProvider';
 export const metadata = {
   title: 'Dump Fun',
   description: 'A place where you dump your sh!t coins',
@@ -64,7 +64,9 @@ export default function RootLayout({
         <Script id='debridgeWidgetScript' src='https://app.debridge.finance/assets/scripts/widget.js'/>
         <div className='status-bar'></div>
         <ReactQueryProvider>
+
           <ClusterProvider>
+            <WagmiProvider>
             <SolanaProvider>
               <AccountProvider>
                 <TransactionProvider>
@@ -77,6 +79,7 @@ export default function RootLayout({
               </TransactionProvider>
               </AccountProvider>
             </SolanaProvider>
+            </WagmiProvider>
           </ClusterProvider>
         </ReactQueryProvider>
       </body>

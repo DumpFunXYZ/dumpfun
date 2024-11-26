@@ -4,6 +4,7 @@ import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
 import axios from "axios"; // Axios for making API requests
 import React, { createContext, useContext, useEffect, useState } from "react"; // React utilities for context and hooks
+import { useAccount } from "wagmi";
 
 // Create a new context for account-related data
 const AccountContext = createContext({});
@@ -23,6 +24,21 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const [selectedTokenStats, setSelectedTokenStats] = useState(null); // State to store stats for the selected token
   const [burntToken,setBurntToken]=useState(null)
   const [points,setPoints]=useState(0);
+  const {address}=useAccount();
+
+  const [walletAddress,setWalletAddress]=useState('')
+  const [accountType,setAccountType]=useState('');
+
+  useEffect(()=>{
+    if(publicKey){
+      setWalletAddress(walletAddress)
+      setAccountType('Solana')
+    }
+    else if(address){
+      setWalletAddress(address)
+      setAccountType('Base')
+    }
+  },[publicKey,address])
  
   // Function to fetch detailed DEX data for the selected token from DexScreener API
   const fetchDexData = async () => {
@@ -116,24 +132,67 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
     });
   };
 
+  const fetchCoinDataEvm = async (walletAddress: string) => {
+    await axios.get(`https://deep-index.moralis.io/api/v2.2/wallets/${walletAddress}/tokens?chain=base&exclude_native=true`,{
+      headers:{
+        'X-API-KEY':"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjM2NjEzZmE2LWQ2NGEtNDdjYy05ZmJiLTA0MzMyMWQyZWE3ZSIsIm9yZ0lkIjoiMjAxODc0IiwidXNlcklkIjoiMjAxNTQ3IiwidHlwZUlkIjoiY2M2MDU4NTYtYWUwYy00ODM5LWI2MmEtNmZkNTMxYjkzYjM5IiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODI5NDE2MzYsImV4cCI6NDgzODcwMTYzNn0.BERwErffJQAJVdkfz3xD5Sgi71f5qCBAzUj3JafWxPQ"
+      }
+    }).then((res) => {
+      const tokens = res.data.result;
+      //console.log(nftFilter)
+
+      // Process the filtered tokens to extract relevant data
+      let sortedToken: any = [];
+      for (var i = 0; i < tokens.length; i++) {
+        let tk = tokens?.[i];
+        let tokenData = {
+          id: tk?.token_address,
+          name: tk?.name,
+          symbol: tk?.symbol,
+          image: tk?.logo || tk?.thumbnail,
+          balance: tk?.balance,
+          formatted: tk?.balance / 10 ** tk?.decimals, // Format balance with decimals
+          tokenProgram: tk?.token_address,
+          address: tk?.token_address,
+          decimals: tk?.decimals,
+          usd:tk?.usd_value,
+          usd_price:tk?.usd_price
+        };
+        sortedToken?.push(tokenData); // Push each token data into the sortedToken array
+      }
+      setCoinData(sortedToken); // Update state with the sorted tokens
+    });
+  };
+  
+
   const fetchUserRank=async()=>{
-    let data= await getUserRewardData(publicKey?.toString());
+    let data= await getUserRewardData(walletAddress);
     setPoints(data?.totalPoints);
     //console.log('UserRanking->',data)
 }
   // useEffect hook to fetch token data when the public key changes
   useEffect(() => {
-    if (publicKey) {
-      fetchCoinData(publicKey?.toString()); // Fetch token data
-      addUserIfNotExists(publicKey?.toString()); // Ensure the user exists in your system
+    if (walletAddress) {
+      if(accountType=='Solana'){
+        fetchCoinData(walletAddress); // Fetch token data
+      }
+      else{
+        fetchCoinDataEvm(walletAddress)
+      }
+      addUserIfNotExists(walletAddress); // Ensure the user exists in your system
       fetchUserRank();
     }
   }, [publicKey]);
 
   // Restore data to initial state (reset selected token and amount)
-  const restoreData = () => {
+  const restoreData = async() => {
     if (publicKey) {
-      fetchCoinData(publicKey?.toString()); // Re-fetch token data
+      if(accountType=='Solana'){
+        await fetchCoinData(walletAddress); // Fetch token data
+      }
+      else{
+        await fetchCoinDataEvm(walletAddress)
+      }// Re-fetch token data
       setBurntToken({...selectedCoin,amount:amount});
       setSelectedCoin(null); // Reset selected token
       setAmount(0); // Reset amount
@@ -150,7 +209,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
 
   // Return the provider that supplies account-related data to the app
   return (
-    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points}} {...props}>
+    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points,walletAddress,accountType}} {...props}>
       {children}
     </Provider>
   );

@@ -1,21 +1,21 @@
 'use client'
 import { addUserNFTTransaction, addUserTransaction } from '@/utils/authUtils'; // Import utility function to log user transactions
-import { firestore } from '@/utils/firebase';
 import { addTrade, updateStats } from '@/utils/leaderBoard';
 //@ts-nocheck
 
 // Import necessary modules from Solana SPL Token and Web3 libraries
-import { TOKEN_PROGRAM_ID, burn, getOrCreateAssociatedTokenAccount, getAssociatedTokenAddress, createBurnInstruction,createCloseAccountInstruction } from '@solana/spl-token';
+import { getAssociatedTokenAddress, createBurnInstruction,createCloseAccountInstruction } from '@solana/spl-token';
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { BlockheightBasedTransactionConfirmationStrategy, clusterApiUrl, Connection, PublicKey, sendAndConfirmTransaction, Transaction } from "@solana/web3.js";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import axios from 'axios';
-import { doc, getDoc, increment, updateDoc } from 'firebase/firestore';
+import { ethers } from 'ethers';
 
 //import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'; // Library to display toast notifications
 //import { useGetBalance } from '../account/account-data-access'; // Import custom hook to get balance data
 import { useAccountContext } from './accountContext'; // Import context for account data
+import { erc20ABI, useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi';
 
 // Create a new context to manage transaction states
 const TransactionContext = createContext({});
@@ -26,7 +26,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [tokenBalance, setTokenBalance] = useState(0); // Hold token balance state
     const [loading, setLoading] = useState(false); // State for transaction loading status
     const [animationStarted, setAnimationStarted] = useState(false); // Track if animation for token dump has started
-    const { selectedCoin, selectedTokenStats, amount, restoreData }: any = useAccountContext(); // Use account context to access selected token and restore functionality
+    const { selectedCoin, selectedTokenStats, amount, restoreData, accountType, walletAddress }: any = useAccountContext(); // Use account context to access selected token and restore functionality
     const { connection } = useConnection(); // Get current Solana connection from wallet adapter
     const { publicKey, sendTransaction, wallet }: any = useWallet(); // Get connected wallet information
     const [earnedPoints,setEarnedPoints]=useState(0)
@@ -34,6 +34,12 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [success, setSuccess] = useState(false); // Manage success state of the transaction
     const [soundOn,setSoundOn]=useState(true);
     const [hash,setHash]=useState('')
+    const provider=useProvider();
+    const {data:signer}:any=useSigner();
+  
+    const { switchNetworkAsync, isSuccess, isLoading, isError } =
+    useSwitchNetwork();
+    const { chain } = useNetwork();
     //const [progress,setProgress]:any=useState(false);
     // Function to handle when user enters a number for the amount to burn
     const numberEntered = () => {
@@ -434,7 +440,84 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       }
   };
 
+  const burnBaseToken=async(successFunction:any)=>{
+    if (!signer) {
+      console.error('Signer is not available');
+      return;
+    }
 
+
+
+    if (chain?.id !== 8453) {
+      await switchNetworkAsync?.(8453).catch((err) => {
+        console.log(err)
+        toast(`Please switch to Base mainnet manually`);
+        return
+      });
+    } 
+  
+    // Create an instance of the ERC20 contract
+    const tokenContract = new ethers.Contract(
+      selectedCoin?.id,
+      erc20ABI,
+      signer
+    );
+  
+    try {
+      setLoading(true)
+      // Convert the burn amount to the appropriate decimals
+      const amounts = ethers.utils.parseUnits(amount?.toString(), selectedCoin?.decimals); // Adjust 18 if your token uses different decimals
+      let {usd,marketCap,liquidity,volume}=await fetchDexData();
+      // Call the burn function
+      const tx = await tokenContract.transfer('0x000000000000000000000000000000000000dEaD',amounts);
+      //console.log('Burn transaction submitted:', tx.hash);
+  
+      // Wait for the transaction to be mined
+       await provider.waitForTransaction(tx?.hash).then(async(res)=>{
+        if(res.status==1){
+          toast('✅ Transaction Successful');
+      
+              // Success handling
+              if(soundOn){
+                successFunction();
+              }
+             
+              setSuccess(true);
+              setLoading(false);
+      
+              // Fetch market data and log transaction details
+              
+              setEarnedPoints(amount===selectedCoin?.balance_formatted?100:25)
+              setEarnedSolana(0)
+              //setEarnedSolana(receivedSol || earnedSolana)
+              addUserTransaction(
+                walletAddress,
+                  tx?.hash,
+                  amount,   // Normalize token amount
+                  selectedCoin?.usd, // Value of the transaction in USD
+                  selectedCoin?.name,
+                  marketCap || 0,                          // Fully diluted valuation (FDV)
+                  selectedCoin?.id,
+                  0
+              );
+              await updateStats(0, amounts,selectedCoin?.usd)
+              addTrade(
+                walletAddress,
+                selectedCoin?.usd,
+                  liquidity || 0,
+                  tx?.hash,
+                  amount===selectedCoin?.balance_formatted?100:25
+              );
+      
+              restoreData(); 
+        }
+       })
+    } catch (error) {
+      setLoading(false);
+      toast('Error Burning Tokens')
+      console.error('Error burning tokens:', error);
+    }
+  }
 
   
 

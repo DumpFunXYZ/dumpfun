@@ -40,7 +40,11 @@
     "react-lazy-load-image-component": "^1.6.2",
     "react-swipeable-bottom-sheet": "^1.1.2",
     "react-tweet": "^3.2.1",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@web3modal/ethereum": "^2.6.0",
+    "@web3modal/react": "^2.6.0",
+    "ethers": "^5.7.2",
+    "wagmi": "^0.12.1"
   },
   "devDependencies": {
     "@nx/eslint": "19.0.0",
