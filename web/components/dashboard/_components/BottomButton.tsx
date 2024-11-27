@@ -26,9 +26,9 @@ function useKeyboardStatus() {
 
 
 export default function BottomButton({onClick}:any) {
-  const {publicKey}=useWallet();
+ 
   
-  const {selectedCoin,amount}:any=useAccountContext();
+  const {selectedCoin,amount,walletAddress}:any=useAccountContext();
   const [inputMode,setInputMode]:any=useState(false)
 
   const onHide=()=>{

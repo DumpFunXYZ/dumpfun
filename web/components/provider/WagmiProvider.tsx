@@ -11,11 +11,12 @@ import {
     w3mProvider,
   } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
+import { base } from '@/utils/contants';
 
   export const WagmiProvider = ({children}:any) => {
     let projectId='892fc3740cf9887e8ba7a6cd17b6d45e'
     const chains: any = [
-    //   base,
+       base,
       mainnet,
       polygon,
     ];

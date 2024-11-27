@@ -1,16 +1,17 @@
+import { useAccountContext } from '@/components/context/accountContext';
 import { useWallet } from '@solana/wallet-adapter-react'
 import React, { useEffect } from 'react'
 import { toast } from 'react-hot-toast';
 import logo from '../../../app/assets/logo.svg'
 
 export default function Launch({setLoaded}:any) {
-  const {publicKey}=useWallet();
+  const {walletAddress}:any=useAccountContext();
 
   useEffect(()=>{
-    if(publicKey?.toString()){
+    if(walletAddress){
       setLoaded(true)
     }
-  },[publicKey])
+  },[walletAddress])
 
 
   return (

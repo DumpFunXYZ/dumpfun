@@ -15,7 +15,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'; // Library to display toast notifications
 //import { useGetBalance } from '../account/account-data-access'; // Import custom hook to get balance data
 import { useAccountContext } from './accountContext'; // Import context for account data
-import { erc20ABI, useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi';
+import { erc20ABI, useAccount, useNetwork, useProvider, useSigner, useSwitchNetwork } from 'wagmi';
+import { reportBug } from '@/utils/commonUtils';
 
 // Create a new context to manage transaction states
 const TransactionContext = createContext({});
@@ -29,6 +30,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const { selectedCoin, selectedTokenStats, amount, restoreData, accountType, walletAddress }: any = useAccountContext(); // Use account context to access selected token and restore functionality
     const { connection } = useConnection(); // Get current Solana connection from wallet adapter
     const { publicKey, sendTransaction, wallet }: any = useWallet(); // Get connected wallet information
+    const {address}=useAccount()
     const [earnedPoints,setEarnedPoints]=useState(0)
     const [earnedSolana,setEarnedSolana]=useState(0.0016)
     const [success, setSuccess] = useState(false); // Manage success state of the transaction
@@ -66,7 +68,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           volume:0
         }
       })
-      console.log(dexData?.data)
+      //console.log(dexData?.data)
       if(dexData?.data?.pairs?.length>0){
         let dt=dexData?.data?.pairs?.[0]
         return {
@@ -90,20 +92,27 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const onDumpClicked = (successFunction: any) => {
         setAnimationDone(false);
         setAnimationStarted(false);
-        if(selectedCoin?.type=='nft'){
-          burnNFTWithRent(selectedCoin?.id, successFunction);
-        }
-        else{
-          if(amount === selectedCoin?.formatted){
-           
-              burnTokenWithRent(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
-            
-            
+        
+        if(accountType=='Solana'){
+          if(selectedCoin?.type=='nft'){
+            burnNFTWithRent(selectedCoin?.id, successFunction);
           }
           else{
-            burnToken(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+            if(amount === selectedCoin?.formatted){
+             
+                burnTokenWithRent(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+              
+              
+            }
+            else{
+              burnToken(selectedCoin?.id, amount * 10 ** selectedCoin?.decimals, successFunction);
+            }
           }
         }
+        else{
+          burnBaseToken(successFunction);
+        }
+       
         // Call the function to burn the selected tokens
         
        
@@ -173,10 +182,11 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     selectedCoin?.name,
                     ( marketCap || 0), // Fully diluted valuation (FDV)
                     tokenMint?.toString(),
-                    0
+                    0,
+                    'Solana'
                   );
                 }, 0); 
-                await updateStats(0, amount / 10 ** selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),)
+                await updateStats(0, amount / 10 ** selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),10)
                 addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),10)
                 //setEarnedPoints((amount / 10 ** selectedCoin?.decimals) * ( usd || 0)*10)
                 setEarnedPoints(10)
@@ -197,6 +207,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           }).catch((err)=>{
             setLoading(false); // Reset loading state if error occurs
             toast(`❌ ${err}`); 
+            reportBug('Error Burning Tokens on Solana',JSON.stringify(err))
             console.error('Error burning tokens:', err); 
           })
 
@@ -206,6 +217,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
         } catch (error) {
           setLoading(false); // Reset loading state if error occurs
           toast(`❌ ${error}`); 
+          reportBug('Error Burning NFTs on Solana',JSON.stringify(error))
           console.error('Error burning tokens:', error); // Log the error details
         }
       };
@@ -295,10 +307,11 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     selectedCoin?.name,
                     marketCap || 0,                          // Fully diluted valuation (FDV)
                     tokenMint.toString(),
-                    receivedSol || earnedSolana
+                    receivedSol || earnedSolana,
+                    'Solana'
                 );
 
-                await updateStats(receivedSol || earnedSolana,amount/10**selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * (usd || 0))
+                await updateStats(receivedSol || earnedSolana,amount/10**selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * (usd || 0),100)
                
                 addTrade(
                     publicKey.toString(),
@@ -321,6 +334,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
         } catch (error) {
             setLoading(false); // Reset loading state if error occurs
             toast(`❌ ${error}`); // Notify user of failure
+            reportBug('Error Burning Tokens on Solana',JSON.stringify(error))
             //console.error('Error burning tokens:', JSON.stringify(error,null,2)); // Log the error details
         }
     };
@@ -436,6 +450,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       } catch (error) {
           setLoading(false);
           toast(`❌ ${error}`); 
+          reportBug('Error Burning NFTs on Solana',JSON.stringify(error))
           console.error('Error burning NFT:', error);
       }
   };
@@ -451,6 +466,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     if (chain?.id !== 8453) {
       await switchNetworkAsync?.(8453).catch((err) => {
         console.log(err)
+        reportBug('Error Changing Chains',JSON.stringify(err))
         toast(`Please switch to Base mainnet manually`);
         return
       });
@@ -487,7 +503,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       
               // Fetch market data and log transaction details
               
-              setEarnedPoints(amount===selectedCoin?.balance_formatted?100:25)
+              setEarnedPoints(amount===selectedCoin?.formatted?100:25)
               setEarnedSolana(0)
               //setEarnedSolana(receivedSol || earnedSolana)
               addUserTransaction(
@@ -498,15 +514,17 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                   selectedCoin?.name,
                   marketCap || 0,                          // Fully diluted valuation (FDV)
                   selectedCoin?.id,
-                  0
+                  0,
+                  'Base'
               );
-              await updateStats(0, amounts,selectedCoin?.usd)
+              await updateStats(0, amounts,selectedCoin?.usd,amount===selectedCoin?.formatted?100:25)
+              //console.log(amount===selectedCoin?.formatted,amount,selectedCoin?.balance_formatted)
               addTrade(
                 walletAddress,
                 selectedCoin?.usd,
                   liquidity || 0,
                   tx?.hash,
-                  amount===selectedCoin?.balance_formatted?100:25
+                  amount===selectedCoin?.formatted?100:25
               );
       
               restoreData(); 
@@ -515,6 +533,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     } catch (error) {
       setLoading(false);
       toast('Error Burning Tokens')
+      reportBug('Error Burning NFTs on Solana',JSON.stringify(error))
       console.error('Error burning tokens:', error);
     }
   }

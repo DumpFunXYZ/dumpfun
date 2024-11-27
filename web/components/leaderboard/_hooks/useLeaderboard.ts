@@ -1,3 +1,4 @@
+import { useAccountContext } from "@/components/context/accountContext";
 import { getLeaderboard, getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { useState, useEffect } from "react";
@@ -5,7 +6,7 @@ import React, { useState, useEffect } from "react";
 const useLeaderboard = () => {
     const [rankings,setRankings]=useState([])
     const [userRank,setUserRank]:any=useState(null)
-    const {publicKey}=useWallet();
+    const {walletAddress}:any=useAccountContext();
 
     const fetchRankings=async()=>{
         let data= await getLeaderboard(20);
@@ -13,7 +14,7 @@ const useLeaderboard = () => {
         console.log('Rankings->',data)
     }
     const fetchUserRank=async()=>{
-        let data= await getUserRewardData(publicKey?.toString());
+        let data= await getUserRewardData(walletAddress);
         setUserRank(data);
         console.log('UserRanking->',data)
     }
@@ -23,10 +24,10 @@ const useLeaderboard = () => {
     },[])
 
     useEffect(()=>{
-        if(publicKey?.toString()){
+        if(walletAddress){
             fetchUserRank()
         }
-    },[publicKey])
+    },[walletAddress])
 
   return {
     rankings,userRank

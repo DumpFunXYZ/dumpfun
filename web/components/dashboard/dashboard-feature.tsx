@@ -13,6 +13,8 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import Loading from './_components/Loading';
 import { WalletButton } from '../solana/solana-provider';
 import { TransactionProgress } from './_components/TransactionProgress';
+import Popup from './_components/AlertPopup';
+import { useAccountContext } from '../context/accountContext';
 
 
 export default function Dashboard() {
@@ -20,7 +22,8 @@ export default function Dashboard() {
   const [visible,setVisible]=useState(false);
   const [loaded,setLoaded]=useState(false);
   const {success,setSuccess,loading,setLoading}:any=useTransactionContext();
-  const {publicKey}:any=useWallet()
+  const {walletAddress}:any=useAccountContext()
+
 
   return (
     <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col items-center justify-center">
@@ -34,10 +37,6 @@ export default function Dashboard() {
         <DumpButton onDefaultClick={()=>{
 setOpen(true)
         }}/>
-          {publicKey? <></>:
-          <div className='opacity-0 z-10 top-0 absolute'>
-              <WalletButton />
-            </div>}
          
           <div className='w-[100%] h-[80%] absolute  -top-10 flex flex-col items-center justify-start'>
         
@@ -49,14 +48,14 @@ setOpen(true)
           <img src={ToiletSeat.src} className={'h-[100%] scale-x-110'} />
         </div>
        {open && <BottomSheetComponent isOpen={open} setIsOpen={setOpen}/>}
-        {publicKey && <BottomButton onClick={()=>{
+        {walletAddress && <BottomButton onClick={()=>{
            setOpen(true)
           
         }}/>}
         
         {success && <SuccessSheet isOpen={success} setIsOpen={setSuccess}/>}
         {loading && <TransactionProgress isOpen={loading} setIsOpen={setLoading}/>}
-        
+       
       </div>:<Launch setLoaded={setLoaded}/>}
       
       

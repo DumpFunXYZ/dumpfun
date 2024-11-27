@@ -1,5 +1,6 @@
 'use client'
 import { addUserIfNotExists } from "@/utils/authUtils"; // Importing utility function to check if user exists
+import { reportBug } from "@/utils/commonUtils";
 import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
 import { PublicKey } from "@solana/web3.js";
@@ -12,7 +13,7 @@ const AccountContext = createContext({});
 const { Provider, Consumer } = AccountContext;
 
 // API Key for Helius (default or from environment variable)
-const KEY = process.env.HELIUS_KEY || 'e66be7c4-a831-411f-85db-e490ba3713e5';
+const KEY = process.env.HELIUS_KEY || '6d8bea2f-2184-4035-9087-6ea3ebf5626b';
 
 // AccountProvider component to wrap the application with account management logic
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
@@ -30,9 +31,14 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const [walletAddress,setWalletAddress]=useState('')
   const [accountType,setAccountType]=useState('');
 
+//console.log(address)
+
+//console.log(walletAddress,accountType)
+
   useEffect(()=>{
+    //console.log(publicKey,address)
     if(publicKey){
-      setWalletAddress(walletAddress)
+      setWalletAddress(publicKey?.toString())
       setAccountType('Solana')
     }
     else if(address){
@@ -134,7 +140,9 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
       }
       //console.log(sortedNFTs)
       setNftData(sortedNFTs); 
-    });
+    }).catch((err)=>{
+      reportBug('Error Fetching Tokens on Solana',JSON.stringify(err))
+    })
   };
 
   const fetchCoinDataEvm = async (walletAddress: string) => {
@@ -166,7 +174,9 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
         sortedToken?.push(tokenData); // Push each token data into the sortedToken array
       }
       setCoinData(sortedToken); // Update state with the sorted tokens
-    });
+    }).catch((err)=>{
+      reportBug('Error Fetching Tokens on Base',JSON.stringify(err))
+    })
   };
   
 
@@ -187,7 +197,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
       addUserIfNotExists(walletAddress); // Ensure the user exists in your system
       fetchUserRank();
     }
-  }, [publicKey]);
+  }, [walletAddress]);
 
   // Restore data to initial state (reset selected token and amount)
   const restoreData = async() => {

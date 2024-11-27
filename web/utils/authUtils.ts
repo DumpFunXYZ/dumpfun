@@ -31,7 +31,7 @@ export const addUserIfNotExists = async (walletAddress: string): Promise<void> =
   }
 };
 
-export const addUserTransaction = async (walletAddress: string,hash:any,amount:any,amountInUsd:any,name:string,volume:any,tokenAddress:any,earnedSolana:any): Promise<void> => {
+export const addUserTransaction = async (walletAddress: string,hash:any,amount:any,amountInUsd:any,name:string,volume:any,tokenAddress:any,earnedSolana:any,chain:any): Promise<void> => {
     try {
       const userDocRef = doc(firestore, 'dumps', hash);
       //console.log(walletAddress,hash,amount,amountInUsd,name,volume)
@@ -49,7 +49,8 @@ export const addUserTransaction = async (walletAddress: string,hash:any,amount:a
           volume:volume,
           createdAt: Timestamp.now(),
           tokenAddress:tokenAddress,
-          rent:earnedSolana
+          rent:earnedSolana,
+          chain:chain
         };
         await setDoc(userDocRef, userData);
         //console.log('Document added for wallet address:', walletAddress);
