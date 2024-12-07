@@ -19,10 +19,10 @@ interface BottomSheet{
 
 
 export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
-  const {coinData,setSelectedCoin,nftData,setAmount}:any=useAccountContext();
+  const {coinData,setSelectedCoin,nftData,setAmount,type,setType}:any=useAccountContext();
   const {numberEntered}:any=useTransactionContext()
-  const [type,setType]=useState('Tokens')
-  const types=['Tokens','NFTs']
+  //const [type,setType]=useState('Tokens')
+  const types=['Shitcoins','NFTs']
   //console.log(coinData)
   return (
     <SwipeableBottomSheet
@@ -50,7 +50,7 @@ export function BottomSheetComponent({isOpen,setIsOpen}:BottomSheet) {
         </button>
       ))}
 </div>
-{type=='Tokens' && <>
+{type=='Shitcoins' && <>
 
 {[...coinData].map((item:any,index:any)=>(
             <button 

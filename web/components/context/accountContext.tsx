@@ -1,5 +1,6 @@
 'use client'
 import { addUserIfNotExists } from "@/utils/authUtils"; // Importing utility function to check if user exists
+import { getUnclosedAccounts } from "@/utils/closeAccountUtils";
 import { reportBug } from "@/utils/commonUtils";
 import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
@@ -13,7 +14,7 @@ const AccountContext = createContext({});
 const { Provider, Consumer } = AccountContext;
 
 // API Key for Helius (default or from environment variable)
-const KEY = process.env.HELIUS_KEY || '6d8bea2f-2184-4035-9087-6ea3ebf5626b';
+const KEY = process.env.HELIUS_KEY || 'b0d5dd57-61b9-4b2d-b80c-f0b98dd78d2d';
 
 // AccountProvider component to wrap the application with account management logic
 const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) => {
@@ -26,12 +27,21 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const [selectedTokenStats, setSelectedTokenStats] = useState(null); // State to store stats for the selected token
   const [burntToken,setBurntToken]=useState(null)
   const [points,setPoints]=useState(0);
+  const [closeAccounts,setCloseAccounts]:any=useState([]);
   const {address}=useAccount();
+  const [type,setType]=useState('Shitcoins')
+
+  const dumpTypes=['Shitcoins','NFTs','Flushit']
 
   const [walletAddress,setWalletAddress]=useState('')
   const [accountType,setAccountType]=useState('');
 
 //console.log(address)
+
+const fetchCloseAccountInfo=async(publicKey:string)=>{
+ const accounts= await getUnclosedAccounts(publicKey);
+ setCloseAccounts(accounts)
+}
 
 //console.log(walletAddress,accountType)
 
@@ -40,6 +50,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
     if(publicKey){
       setWalletAddress(publicKey?.toString())
       setAccountType('Solana')
+      fetchCloseAccountInfo(publicKey?.toString())
     }
     else if(address){
       setWalletAddress(address)
@@ -224,7 +235,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
 
   // Return the provider that supplies account-related data to the app
   return (
-    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points,walletAddress,accountType}} {...props}>
+    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points,walletAddress,accountType,type,setType,dumpTypes,closeAccounts,setCloseAccounts}} {...props}>
       {children}
     </Provider>
   );

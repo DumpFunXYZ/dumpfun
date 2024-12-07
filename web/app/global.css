@@ -146,15 +146,18 @@ input{
 /* Rectangle 2 */
 
 .gradientOne{
-  border-width: 1px;
-  border-color: #000000;
-  background: radial-gradient(92.7% 92.7% at 78.37% 7.3%, #99D7E0 0%, #2C4448 97.5%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+ 
+  background-image: url('../app/assets/background/top.png');
+  width: 100%;
+  /*background: radial-gradient(92.7% 92.7% at 78.37% 7.3%, #99D7E0 0%, #2C4448 97.5%)  warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
 }
 
 .gradientTwo{
   /* Rectangle 1 */
-
-background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);
+  background-image: url('../app/assets/background/bottom.png');
+  width: 100%;
+  background-repeat: no-repeat;
+/* background: linear-gradient(180deg, #3D585C 0%, #4A767D 39.64%, #39565A 100%);*/
 
 }
 

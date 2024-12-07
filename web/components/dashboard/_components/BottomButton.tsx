@@ -42,13 +42,13 @@ export default function BottomButton({onClick}:any) {
   },[selectedCoin])
 
   return (
-    <div className={`fixed ${inputMode?'bottom-[0px]':'bottom-[22px]'} max-w-md w-[100%] flex items-center justify-center `}>
+    <div className={`fixed ${inputMode?'bottom-[0px]':'bottom-[22px]'} ${inputMode?'max-w-md self-center':'w-[100%]'} flex items-center justify-center `}>
           {inputMode?<InputContainer onHide={onHide} />: <>
           
           {selectedCoin?<button onClick={()=>{
             //onClick()
             setInputMode(true)
-          }} className="bg-[#00191D] press-effect min-w-[360px] h-[72px] px-[16px] py-[12px] rounded-[32px] flex items-center justify-between ">
+          }} className="bg-[#00191D] press-effect max-w-md min-w-[360px] h-[72px] px-[16px] py-[12px] rounded-[32px] flex items-center justify-between ">
             <img src={selectedCoin?.image} className={'w-[48px] h-[48px] rounded-[48px] border border-[1px] border-[#B8E6EE]'}/>
             <p style={{lineHeight:'38px'}} className={'bold text-[32px] text-[#B8E6EE]'}>{nFormatter(amount)}</p>
             <p onClick={(e)=>{

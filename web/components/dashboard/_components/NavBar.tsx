@@ -28,7 +28,7 @@ export default function NavBar() {
 }
 const router =useRouter();
   return (
-    <div className={`navbar w-[100%] top-0 fixed max-w-md w-[100%] flex justify-between px-[16px]`}>
+    <div className={`navbar w-[100%] max-h-[72px] top-0 fixed  w-[100%] flex justify-between px-[16px]`}>
           <div className='flex flex-row items-center animate-slide-in-left justify-center'>
           <button>
           <img onClick={()=>{

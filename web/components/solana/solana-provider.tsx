@@ -37,11 +37,11 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
   const getRandomRPC=()=>{
     let rpc:any=[process.env.RPCENDPOIN,process.env.RPC_ENDPOINT2]
     const random=Math.floor(Math.random()*2);
-    return rpc[random]
+    return 'https://mainnet.helius-rpc.com/?api-key=b0d5dd57-61b9-4b2d-b80c-f0b98dd78d2d'
   }
 
   return (
-    <ConnectionProvider endpoint={getRandomRPC() || 'https://mainnet.helius-rpc.com/?api-key=6d8bea2f-2184-4035-9087-6ea3ebf5626b'}>
+    <ConnectionProvider endpoint={getRandomRPC() || 'https://mainnet.helius-rpc.com/?api-key=b0d5dd57-61b9-4b2d-b80c-f0b98dd78d2d'}>
       <WalletProvider wallets={wallets} onError={onError} autoConnect={true}>
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>

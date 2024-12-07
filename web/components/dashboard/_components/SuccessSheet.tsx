@@ -46,7 +46,7 @@ export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
             </>}
             
             <button onClick={()=>{
-                let content = `Just burnt ${burntToken?.amount} ${burntToken?.name} on @dumpfunxyz !! %0A%0A 🔥 Burn tokens, earn rewards! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart burning today on https://dumpfun.xyz/app! `
+                let content = `Just flushed ${burntToken?.amount} ${burntToken?.name} on @dumpfunxyz !! %0A%0A To flush is to burn 🔥 and to burn is to earn! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart accumulating points today on https://dumpfun.xyz/app! `
                  window.open(`https://x.com/intent/tweet?text=${content}`, '_blank')
             }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[20px] w-[300px] h-[56px] bg-[#42919E] rounded-[32px] bold text-[22px] text-[white]'>Share</button>
             <button onClick={()=>{

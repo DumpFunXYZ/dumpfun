@@ -15,6 +15,8 @@ import { WalletButton } from '../solana/solana-provider';
 import { TransactionProgress } from './_components/TransactionProgress';
 import Popup from './_components/AlertPopup';
 import { useAccountContext } from '../context/accountContext';
+import TabBar from './_components/TabBar';
+import CloseAccount from './_components/CloseAccount';
 
 
 export default function Dashboard() {
@@ -22,26 +24,37 @@ export default function Dashboard() {
   const [visible,setVisible]=useState(false);
   const [loaded,setLoaded]=useState(false);
   const {success,setSuccess,loading,setLoading}:any=useTransactionContext();
-  const {walletAddress}:any=useAccountContext()
+  const {walletAddress,type}:any=useAccountContext()
 
 
   return (
     <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col items-center justify-center">
-      {loaded?<div className="h-full flex relative max-w-md w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] w-full flex-col">
+       
+      {loaded?<>
+      {type=='Flushit'?<div className="h-full flex relative w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] bg-[#00191D] w-full flex-col">
+       
+       <NavBar/>
+      <TabBar/>
+      <CloseAccount/>
+       
+       
+      
+     </div>:<div className="h-full flex relative w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] w-full flex-col">
         <div className='absolute overflow-y-hidden w-[100%] h-[100%] top-0'>
-        <div className='gradientOne w-[100%] h-[65%]'></div>
-        <div className='gradientTwo w-[100%] h-[35%]'></div>
+        <div className='gradientOne w-[100%] h-[70%]'></div>
+        <div className='gradientTwo w-[100%] h-[30%]'></div>
         </div>
         <NavBar/>
-        <div className='w-[100%] h-[75%] mt-[110px] flex items-center  justify-center relative'>
+       <TabBar/>
+        <div className='w-[100%] h-[70%] mt-[50px] flex items-center  justify-center relative'>
         <DumpButton onDefaultClick={()=>{
 setOpen(true)
         }}/>
          
-          <div className='w-[100%] h-[80%] absolute  -top-10 flex flex-col items-center justify-start'>
+          <div className='sm:max-w-md w-[100%] h-[80%] absolute  -top-10 flex flex-col items-center justify-start'>
         
           
-          <div style={{zIndex:2}} className='w-[35%] h-[100%] rounded-b-[20px] '>
+          <div style={{zIndex:2}} className='w-[35%]  h-[100%] rounded-b-[20px] '>
           <FreefallAnimation/>
           </div>
           </div>
@@ -56,7 +69,8 @@ setOpen(true)
         {success && <SuccessSheet isOpen={success} setIsOpen={setSuccess}/>}
         {loading && <TransactionProgress isOpen={loading} setIsOpen={setLoading}/>}
        
-      </div>:<Launch setLoaded={setLoaded}/>}
+      </div>}
+      </>:<Launch setLoaded={setLoaded}/>}
       
       
     </div>

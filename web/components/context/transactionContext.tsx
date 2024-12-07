@@ -277,7 +277,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
             const balanceAfter = await connection.getBalance(publicKey);
             
             await connection.getTransaction(signature).then(async(transaction) => {
-              console.log('Tx',transaction)
+              //console.log('Tx',transaction)
               if (transaction && transaction.meta && transaction.meta.err) {
                 setLoading(false);
                 toast.error(`Transaction Failed onchain`)  
@@ -381,6 +381,10 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
           console.log('⌛ Transaction Sent for Confirmation');
           toast('⌛ Transaction Sent for Confirmation');
           setHash(signature)
+          await connection.confirmTransaction(
+            { signature, blockhash, lastValidBlockHeight },
+            'finalized'
+        )
           const balanceAfter = await connection.getBalance(publicKey);
           await connection.getTransaction(signature).then((transaction) => {
             
