@@ -12,18 +12,24 @@ function TextComponent() {
             <p className='medium sm:text-[16px] text-[12px] text-[#00191D]'>dumpfunxyz@gmail.com</p>
             <div className='flex flex-row my-[12px] items-center justify-center'>
                <button onClick={()=>{
-                window.location.href='https://t.me/+WoPP-lH6JLhjY2E1'
+                if(typeof window!=="undefined"){
+                  window.location.href='https://t.me/+WoPP-lH6JLhjY2E1'
+                }
                }} className='mr-[12px]'>
                 <img className='h-[32px] w-[32px] rounded-[32px]' src={'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png'}/>
                 </button> 
                 <button onClick={()=>{
+                   if(typeof window!=="undefined"){
+
                 window.location.href='https://x.com/dumpfunxyz'
+                   }
                }}  className='ml-[12px]'>
                 <img className='h-[32px] w-[32px] rounded-[32px]' src={'https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg?t=st=1725384937~exp=1725388537~hmac=4b26865cae93f5da597999bbe16152c4f0e0c4fe800ade1d99c2083a78d39432&w=826'}/>
                 </button> 
                 <button onClick={()=>{
+                   if(typeof window!=="undefined"){
                    window.location.href='https://dumpfun-docs.vercel.app/docs/welcome'
-                
+                   }
                }}   className='ml-[12px]'>
                 <img className='h-[32px] w-[32px] ' src={document.src}/>
                 </button> 

@@ -2,13 +2,16 @@
 import { useAccountContext } from '@/components/context/accountContext';
 import { useTransactionContext } from '@/components/context/transactionContext';
 
+import dynamic from 'next/dynamic';
 /*@ts-ignore */
-import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
-
+const SwipeableBottomSheet:any = dynamic(() => import('react-swipeable-bottom-sheet'), {
+  ssr: false,
+});
 import fire from '../../../app/assets/fire.gif'
 import { nFormatter } from '@/utils/numberUtils';
 
 interface BottomSheet{
+  type:String,
     isOpen:boolean,
     setIsOpen:Function
 }
@@ -17,7 +20,7 @@ interface BottomSheet{
 
 
 
-export function TransactionProgress({isOpen,setIsOpen}:BottomSheet) {
+export function TransactionProgress({type,isOpen,setIsOpen}:BottomSheet) {
   const {coinData,setSelectedCoin,nftData,setAmount,amount,selectedCoin}:any=useAccountContext();
   const {numberEntered,hash}:any=useTransactionContext()
   //console.log(coinData)
@@ -41,10 +44,12 @@ export function TransactionProgress({isOpen,setIsOpen}:BottomSheet) {
         </div>
             <div className='flex flex-col items-center justify-start'>
             <img className='w-[200px] h-[200px]' src={fire.src}/>
-            <p style={{lineHeight:'24px'}} className='bold text-[white] text-[18px] my-[14px]'>Burning {nFormatter(amount)} {selectedCoin?.symbol}</p>
+            <p style={{lineHeight:'24px'}} className='bold text-[white] text-[18px] my-[14px]'>Closing Accounts</p>
             {hash && <button onClick={()=>{
               //setIsOpen(false)
-              window.open(`https://solscan.io/tx/${hash}`,'_blank')
+              if(typeof window!=='undefined'){
+              window?.open(`https://solscan.io/tx/${hash}`,'_blank')
+              }
             }} style={{lineHeight:'24px'}} className='text-[#fff] text-[17px] mt-[64px] regular underline'>Check Transaction</button>}
             
             </div>

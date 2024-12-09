@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import settings from '../../../app/assets/settings.svg';
 import on from '../../../app/assets/soundOn.svg';
 import off from '../../../app/assets/soundOff.svg';
+import menu from '../../../app/assets/menu.svg';
+import name from '../../../app/assets/name.svg' 
 import { WalletButton,DisconnectButton } from '@/components/solana/solana-provider';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useRouter } from 'next/navigation';
@@ -16,20 +18,48 @@ import { Web3Button } from '@web3modal/react';
 export default function NavBar() {
   //const {publicKey}=useWallet();
   const {soundOn,setSoundOn}:any=useTransactionContext()
-  const {points,walletAddress}:any=useAccountContext()
+  const {points,walletAddress,setSideBarOpen}:any=useAccountContext()
   const [open,setOpen]:any=useState(false)
   const { disconnect } = useDisconnect()
-  function inIframe () {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
-}
-const router =useRouter();
+  
   return (
-    <div className={`navbar w-[100%] max-h-[72px] top-0 fixed  w-[100%] flex justify-between px-[16px]`}>
-          <div className='flex flex-row items-center animate-slide-in-left justify-center'>
+    <div className={`navbar w-[100%] max-h-[72px] top-0 fixed  w-[100%] bg-[#00292F] flex justify-between px-[16px]`}>
+      <img className='h-[24px]' src={name.src}/>
+      <button className='sm:hidden' onClick={()=>{
+setSideBarOpen(true)
+      }}>
+        <img src={menu.src}/>
+      </button>
+      <div className='sm:flex hidden'>
+      {walletAddress? <div className="flex-none space-x-2 relative animate-slide-in-right">
+           <button onClick={()=>{
+             //disconnect();
+             if(typeof window!=='undefined'){
+              localStorage.clear();
+              window.location.reload()
+             }
+            
+           }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Disconnect</button>
+            
+          </div> : <div className="flex-none bg-[#42919E] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative animate-slide-in-right">
+           <button onClick={()=>{
+            setOpen(true)
+           }} className='fontBold text-[17px] medium text-[white]'>Connect Wallet</button>
+            <div className='opacity-0 absolute'>
+             
+              </div>
+              </div>}
+              <Popup  isOpen={open} onClose={()=>{
+              setOpen(false)
+             }}/>
+      </div>
+    </div>
+  )
+}
+
+{/*
+
+<div className='flex flex-row items-center animate-slide-in-left justify-center'>
           <button>
           <img onClick={()=>{
             router.push('/leaderboard')
@@ -57,13 +87,11 @@ const router =useRouter();
             setOpen(true)
            }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Connect</button>
             <div className='opacity-0 absolute'>
-              {/* <Web3Button /> */}
-            </div>
-          </div>}
-          <Popup  isOpen={open} onClose={()=>{
-          setOpen(false)
-         }}/>
-         
-        </div>
-  )
-}
+             
+              </div>
+              </div>}
+              <Popup  isOpen={open} onClose={()=>{
+              setOpen(false)
+             }}/>
+
+*/}

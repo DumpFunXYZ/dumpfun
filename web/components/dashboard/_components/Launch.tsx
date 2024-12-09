@@ -1,3 +1,5 @@
+'use client'
+
 import { useAccountContext } from '@/components/context/accountContext';
 import { useWallet } from '@solana/wallet-adapter-react'
 import React, { useEffect } from 'react'

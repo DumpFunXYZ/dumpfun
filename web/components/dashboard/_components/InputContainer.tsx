@@ -17,7 +17,7 @@ export default function InputContainer({onHide}:any) {
 
 
   return (
-    <div id='clickbox' className='bg-[#00191D] rounded-t-[32px] px-[24px] w-[100%]  flex flex-col items-center justify-center'>
+    <div id='clickbox' className='bg-[#00191D] rounded-t-[32px] px-[24px] w-[100%]  flex flex-col items-center self-center justify-center'>
         <div className='w-[100%] flex flex-row items-center justify-between py-[13px]'>
             <p style={{lineHeight:'32px'}} className='text-[22px] bold text-[#fff]'>Select Amount</p>
             <p onClick={()=>{

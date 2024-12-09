@@ -27,7 +27,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     const [tokenBalance, setTokenBalance] = useState(0); // Hold token balance state
     const [loading, setLoading] = useState(false); // State for transaction loading status
     const [animationStarted, setAnimationStarted] = useState(false); // Track if animation for token dump has started
-    const { selectedCoin, selectedTokenStats, amount, restoreData, accountType, walletAddress }: any = useAccountContext(); // Use account context to access selected token and restore functionality
+    const { selectedCoin, selectedTokenStats, amount, restoreData, accountType, walletAddress,closeAccounts,fetchCloseAccountInfo }: any = useAccountContext(); // Use account context to access selected token and restore functionality
     const { connection } = useConnection(); // Get current Solana connection from wallet adapter
     const { publicKey, sendTransaction, wallet }: any = useWallet(); // Get connected wallet information
     const {address}=useAccount()
@@ -542,6 +542,101 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     }
   }
 
+  const onCloseAccountClicked=async()=>{
+    let audio = new Audio("https://firebasestorage.googleapis.com/v0/b/enclave-74f51.appspot.com/o/product%2Fflush.mp3?alt=media&token=75b2eed4-97de-47b8-a8ed-833395709be7")
+    let add:any=[]
+    let sum:any=0
+    for(var i=0;i<closeAccounts?.length;i++){
+      let acc=closeAccounts?.[i]?.account?.data?.parsed?.info?.mint
+      add.push(acc);
+      sum=sum+closeAccounts?.[i]?.account?.lamports/10**9
+    }
+
+    closeAccountsBundled(add,()=>audio.play(),sum)
+  }
+
+  const closeAccountsBundled = async (
+    mintAddresses: PublicKey[], // Array of token mint addresses
+    successFunction: any, // Function to run on successful transaction
+    sum:any
+  ) => {
+    if (!publicKey) {
+      console.error('Wallet not connected'); // Error handling for when wallet is not connected
+      return;
+    }
+  
+    try {
+      setLoading(true); // Set loading state during transaction processing
+  
+      // Initialize a new transaction
+      const transaction = new Transaction();
+      const results = []; // Array to track mint addresses and their statuses
+  
+      for (const mintAddress of mintAddresses) {
+        const tokenMint = new PublicKey(mintAddress); // Create PublicKey object for mint address
+  
+        try {
+          // Get the associated token account for the user
+          const tokenAccount = await getAssociatedTokenAddress(tokenMint, publicKey);
+  
+          // Fetch account information to ensure it has a zero balance
+          
+  
+          // Create the close account instruction and add it to the transaction
+          const closeInstruction = createCloseAccountInstruction(
+            tokenAccount, // Token account to close
+            publicKey, // Destination account to receive rent
+            publicKey // Owner of the token account
+          );
+  
+          transaction.add(closeInstruction); // Add the instruction to the transaction
+          results.push({ mintAddress, status: 'added' });
+        } catch (err:any) {
+          console.error(`Error preparing close instruction for mint ${mintAddress}:`, err);
+          results.push({ mintAddress, status: 'failed', reason: err.message });
+        }
+      }
+  
+      if (transaction.instructions.length === 0) {
+        console.warn('No valid accounts to close.');
+        toast('❌ No accounts were eligible for closure.');
+        setLoading(false);
+        return;
+      }
+  
+      // Send the bundled transaction
+      const signature = await sendTransaction(transaction, connection);
+  
+      const { context: { slot: minContextSlot }, value: { blockhash, lastValidBlockHeight } } = await connection.getLatestBlockhashAndContext();
+  
+      setHash(signature);
+      toast('⌛ Transaction Sent for Confirmation'); // Notify user of sent transaction
+  
+      // Confirm the transaction with the blockchain
+      await connection.confirmTransaction(
+        { signature, blockhash, lastValidBlockHeight },
+        'finalized'
+      );
+  
+      console.log('Bundled accounts closed successfully.');
+      toast('✅ Accounts closed successfully.');
+      setSuccess(true); // Mark the transaction as successful
+      setEarnedPoints(100);
+      setEarnedSolana(sum);
+      if (soundOn) {
+        successFunction();
+      }
+      fetchCloseAccountInfo(publicKey?.toString())
+    } catch (error) {
+      setLoading(false); // Reset loading state if error occurs
+      toast(`❌ ${error}`);
+      reportBug('Error Closing Bundled Accounts on Solana', JSON.stringify(error));
+      console.error('Error closing bundled accounts:', error); // Log the error details
+    } finally {
+      setLoading(false); // Ensure loading state is reset
+    }
+  };
+  
   
 
     // Effect to trigger animation when token dump starts
@@ -554,7 +649,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
     }, [animationStarted]);
 
   return (
-    <Provider value={{ loading, numberEntered, animationDone, onDumpClicked, animationStarted, success, setSuccess,earnedPoints,earnedSolana,soundOn,setSoundOn,setLoading,hash,setHash }} {...props}>
+    <Provider value={{ loading, numberEntered, animationDone, onDumpClicked, animationStarted, success, setSuccess,earnedPoints,earnedSolana,soundOn,setSoundOn,setLoading,hash,setHash,onCloseAccountClicked }} {...props}>
       {children}
     </Provider>
   );

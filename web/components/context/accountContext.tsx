@@ -30,6 +30,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const [closeAccounts,setCloseAccounts]:any=useState([]);
   const {address}=useAccount();
   const [type,setType]=useState('Shitcoins')
+  const [sideBarOpen,setSideBarOpen]=useState(false)
 
   const dumpTypes=['Shitcoins','NFTs','Flushit']
 
@@ -235,7 +236,7 @@ const fetchCloseAccountInfo=async(publicKey:string)=>{
 
   // Return the provider that supplies account-related data to the app
   return (
-    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points,walletAddress,accountType,type,setType,dumpTypes,closeAccounts,setCloseAccounts}} {...props}>
+    <Provider value={{ AccountData, coinData, selectedCoin, setSelectedCoin, amount, setAmount, selectedTokenStats, restoreData, burntToken,nftData,points,walletAddress,accountType,type,setType,dumpTypes,closeAccounts,setCloseAccounts,sideBarOpen,setSideBarOpen,fetchCloseAccountInfo}} {...props}>
       {children}
     </Provider>
   );

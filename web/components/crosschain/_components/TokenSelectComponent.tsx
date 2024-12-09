@@ -2,9 +2,11 @@
 import { useAccountContext } from '@/components/context/accountContext';
 import { useTransactionContext } from '@/components/context/transactionContext';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 /*@ts-ignore */
-import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
-
+const SwipeableBottomSheet:any = dynamic(() => import('react-swipeable-bottom-sheet'), {
+  ssr: false,
+});
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 import placeholder from '../../../app/assets/place.png'

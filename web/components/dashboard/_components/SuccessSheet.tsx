@@ -3,11 +3,15 @@ import { useAccountContext } from '@/components/context/accountContext';
 import { useEffect, useState } from 'react';
 import CoinLogo from '../../../app/assets/coin-logo.svg'
 import SolanaLogo from '../../../app/assets/solana.svg'
+import dynamic from 'next/dynamic';
 /*@ts-ignore */
-import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
+const SwipeableBottomSheet:any = dynamic(() => import('react-swipeable-bottom-sheet'), {
+  ssr: false,
+});
 import { useTransactionContext } from '@/components/context/transactionContext';
 
 interface BottomSheet{
+  type:String,
     isOpen:boolean,
     setIsOpen:Function
 }
@@ -16,7 +20,7 @@ interface BottomSheet{
 
 
 
-export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
+export function SuccessSheet({type,isOpen,setIsOpen}:BottomSheet) {
   const {coinData,setSelectedCoin,selectedCoin,amount,burntToken}:any=useAccountContext();
   const {earnedSolana,earnedPoints,hash,setHash,success}:any=useTransactionContext()
   useEffect(()=>{
@@ -46,8 +50,11 @@ export function SuccessSheet({isOpen,setIsOpen}:BottomSheet) {
             </>}
             
             <button onClick={()=>{
-                let content = `Just flushed ${burntToken?.amount} ${burntToken?.name} on @dumpfunxyz !! %0A%0A To flush is to burn 🔥 and to burn is to earn! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart accumulating points today on https://dumpfun.xyz/app! `
-                 window.open(`https://x.com/intent/tweet?text=${content}`, '_blank')
+              if(typeof window!=='undefined'){
+                let content = type=='Close'?`Just closed unwanted memecoins acccounts on @dumpfunxyz !! %0A%0A To flush is to burn 🔥 and to burn is to earn! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart accumulating points today on https://dumpfun.xyz/app! `:`Just flushed ${burntToken?.amount} ${burntToken?.name} on @dumpfunxyz !! %0A%0A To flush is to burn 🔥 and to burn is to earn! %0A%0AEarn $DUMP by flushing your bad trades down the toilet 🚽 . %0A%0AStart accumulating points today on https://dumpfun.xyz/app! `
+                window?.open(`https://x.com/intent/tweet?text=${content}`, '_blank')
+               }
+                
             }} style={{lineHeight:'32px'}} className='mt-[60px] press-effect mb-[20px] w-[300px] h-[56px] bg-[#42919E] rounded-[32px] bold text-[22px] text-[white]'>Share</button>
             <button onClick={()=>{
               setIsOpen(false)

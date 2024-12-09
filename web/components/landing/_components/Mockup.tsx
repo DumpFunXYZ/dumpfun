@@ -9,7 +9,10 @@ function Mockup() {
         <img className='w-[320px] h-[600px]' src={Iphone15Pro.src} />
         <button
         onClick={()=>{
-          window.location.href='https://dumpfun.xyz/app'
+          if(typeof window!=='undefined'){
+            let origin=window.location.origin
+            window.location.href=`${origin}/app`
+          }
         }}
         style={{lineHeight:'32px'}} className='bg-[rgba(37,179,204)] my-[30px] rounded-[32px] min-h-[56px] w-[300px] flex items-center justify-center text-[#00191D] text-[22px] bold'>Start Dumping</button>
     </div>

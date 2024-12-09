@@ -13,6 +13,9 @@ const nextConfig = {
     RPC_ENDPOINT:process.env.RPC_ENDPOINT,
     RPC_ENDPOINT2:process.env.RPC_ENDPOINT2
   },
+  experimental: {
+    appDir: false, // If using the app directory and want to disable it
+  },
   webpack: (config) => {
     config.externals = [
       ...(config.externals || []),

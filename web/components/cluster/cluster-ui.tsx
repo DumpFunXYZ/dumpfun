@@ -190,7 +190,7 @@ export function ClusterUiTable() {
                   disabled={item?.active}
                   className="btn btn-xs btn-default btn-outline"
                   onClick={() => {
-                    if (!window.confirm('Are you sure?')) return;
+                    if (!window?.confirm('Are you sure?')) return;
                     deleteCluster(item);
                   }}
                 >

@@ -1,3 +1,5 @@
+'use client'
+
 import { useAccountContext } from '@/components/context/accountContext';
 import { useTransactionContext } from '@/components/context/transactionContext';
 import { nFormatter } from '@/utils/numberUtils';
@@ -5,23 +7,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import React, { useEffect, useState } from 'react'
 import InputContainer from './InputContainer';
 
-function useKeyboardStatus() {
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      // Check if the screen height is significantly reduced (keyboard might be open)
-      setIsKeyboardOpen(window.innerHeight < window.outerHeight - 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  return isKeyboardOpen;
-}
 
 
 
@@ -42,7 +28,7 @@ export default function BottomButton({onClick}:any) {
   },[selectedCoin])
 
   return (
-    <div className={`fixed ${inputMode?'bottom-[0px]':'bottom-[22px]'} ${inputMode?'max-w-md self-center':'w-[100%]'} flex items-center justify-center `}>
+    <div className={`fixed ${inputMode?'bottom-[0px]':'bottom-[22px]'} ${inputMode?'sm:max-w-md w-screen self-center':'w-[100%] self-center'} flex items-center justify-center `}>
           {inputMode?<InputContainer onHide={onHide} />: <>
           
           {selectedCoin?<button onClick={()=>{
