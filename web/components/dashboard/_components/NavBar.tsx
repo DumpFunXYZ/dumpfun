@@ -23,7 +23,7 @@ export default function NavBar() {
   const { disconnect } = useDisconnect()
   
   return (
-    <div className={`navbar w-[100%] max-h-[72px] top-0 fixed  w-[100%] bg-[#00292F] flex justify-between px-[16px]`}>
+    <div style={{zIndex:10}} className={`navbar w-[100%] max-h-[72px] top-0 fixed  w-[100%] bg-[#00292F] flex justify-between px-[16px]`}>
       <img className='h-[24px]' src={name.src}/>
       <button className='sm:hidden' onClick={()=>{
 setSideBarOpen(true)
@@ -31,7 +31,7 @@ setSideBarOpen(true)
         <img src={menu.src}/>
       </button>
       <div className='sm:flex hidden'>
-      {walletAddress? <div className="flex-none space-x-2 relative animate-slide-in-right">
+      {walletAddress? <div className="flex-none space-x-2 relative ">
            <button onClick={()=>{
              //disconnect();
              if(typeof window!=='undefined'){
@@ -41,7 +41,7 @@ setSideBarOpen(true)
             
            }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Disconnect</button>
             
-          </div> : <div className="flex-none bg-[#42919E] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative animate-slide-in-right">
+          </div> : <div className="flex-none bg-[#42919E] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative ">
            <button onClick={()=>{
             setOpen(true)
            }} className='fontBold text-[17px] medium text-[white]'>Connect Wallet</button>

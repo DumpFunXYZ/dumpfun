@@ -26,9 +26,11 @@ export default function Dashboard() {
 
   return (
     <div className=" h-full flex max-w-screen h-screen overflow-y-hidden w-[100%] self-center w-full bg-[#00191D] flex-col items-center justify-center">
-       <SideSheetComponent isOpen={sideBarOpen} setIsOpen={setSideBarOpen}/>
+      {
+        sideBarOpen &&  <SideSheetComponent isOpen={sideBarOpen} setIsOpen={setSideBarOpen}/>
+      }
       {loaded?<>
-      {type=='Flushit'?<div className="h-full sm:mt-0 mt-[70px] flex relative w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] bg-[#00191D] w-full flex-col">
+      {type=='Flushit'?<div className="h-full sm:mt-0 mt-[90px] flex relative w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] bg-[#00191D] w-full flex-col">
        <NavBar/>
       <TabBar/>
       <CloseAccount/>
@@ -39,13 +41,13 @@ export default function Dashboard() {
        
       
      </div>:<div className="h-full flex relative w-[100%] self-center overflow-x-hidden overflow-y-hidden pt-[15px] w-full flex-col">
-        <div className='absolute overflow-y-hidden w-[100%] h-[100%] top-0'>
+        <div className='absolute overflow-y-hidden w-[100%] h-full top-0'>
         <div className='gradientOne w-[100%] h-[70%]'></div>
         <div className='gradientTwo w-[100%] h-[30%]'></div>
         </div>
         <NavBar/>
        <TabBar/>
-        <div className='w-[100%] h-[70%] mt-[100px] sm:mt-[50px] flex items-center  justify-center relative'>
+        <div className='w-[100%] h-[70%] mt-[30%] sm:mt-[50px] flex items-center  justify-center relative'>
         <DumpButton onDefaultClick={()=>{
 setOpen(true)
         }}/>

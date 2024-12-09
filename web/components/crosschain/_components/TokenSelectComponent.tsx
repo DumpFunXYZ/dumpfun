@@ -27,7 +27,7 @@ export function TokenSelectComponent({isOpen,setIsOpen,tokenList,setToken}:Botto
   //console.log(coinData)
   return (
     <SwipeableBottomSheet
-      overflowHeight={60}
+      overflowHeight={0}
       open={isOpen}
       marginTop={120}
       fullScreen={true}

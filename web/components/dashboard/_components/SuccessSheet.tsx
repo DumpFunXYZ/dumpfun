@@ -30,7 +30,7 @@ export function SuccessSheet({type,isOpen,setIsOpen}:BottomSheet) {
   },[success])
   return (
     <SwipeableBottomSheet
-      overflowHeight={60}
+      overflowHeight={0}
       open={isOpen}
       marginTop={120}
       fullScreen={false}

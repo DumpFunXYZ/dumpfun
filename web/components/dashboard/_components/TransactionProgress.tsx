@@ -27,7 +27,7 @@ export function TransactionProgress({type,isOpen,setIsOpen}:BottomSheet) {
 //   console.log(hash)
   return (
     <SwipeableBottomSheet
-      overflowHeight={20}
+      overflowHeight={0}
       open={isOpen}
       marginTop={200}
       fullScreen={true}
@@ -44,7 +44,7 @@ export function TransactionProgress({type,isOpen,setIsOpen}:BottomSheet) {
         </div>
             <div className='flex flex-col items-center justify-start'>
             <img className='w-[200px] h-[200px]' src={fire.src}/>
-            <p style={{lineHeight:'24px'}} className='bold text-[white] text-[18px] my-[14px]'>Closing Accounts</p>
+            <p style={{lineHeight:'24px'}} className='bold text-[white] text-[18px] my-[14px]'>{type=='Close'?'Closing Accounts':'Burning Tokens'} </p>
             {hash && <button onClick={()=>{
               //setIsOpen(false)
               if(typeof window!=='undefined'){

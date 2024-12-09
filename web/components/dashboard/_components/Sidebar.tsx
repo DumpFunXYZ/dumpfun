@@ -33,7 +33,7 @@ export function SideSheetComponent({isOpen,setIsOpen}:BottomSheet) {
       onChange={() => setIsOpen(!isOpen)}
     >
       <div className='bg-[#000D0F] sm:w-[430px] w-screen min-h-[100%] rounded-t-[32px] pt-[12px] px-[24px] flex flex-col items-center justify-center'>
-      {walletAddress? <div className="flex-none  space-x-2 relative animate-slide-in-right">
+      {walletAddress? <div className="flex-none  space-x-2 relative ">
            <button onClick={()=>{
              //disconnect();
              localStorage.clear();
@@ -43,7 +43,7 @@ export function SideSheetComponent({isOpen,setIsOpen}:BottomSheet) {
              
            }} className='fontBold text-[17px] bold text-[#B8E6EE]'>Disconnect</button>
             
-          </div> : <div className="flex-none bg-[#42919E] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative animate-slide-in-right">
+          </div> : <div className="flex-none bg-[#42919E] press-effect p-[6px] rounded-full px-[12px] space-x-2 relative ">
            <button onClick={()=>{
             setOpen(true)
            }} className='fontBold text-[17px] medium text-[white]'>Connect Wallet</button>

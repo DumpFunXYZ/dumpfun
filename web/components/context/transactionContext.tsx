@@ -186,10 +186,11 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     'Solana'
                   );
                 }, 0); 
-                await updateStats(0, amount / 10 ** selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),10)
-                addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),10)
+                let usdValue=(amount / 10 ** selectedCoin?.decimals) * ( usd || 0)
+                await updateStats(0, amount / 10 ** selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),usdValue>1?999:499,0)
+                addTrade(publicKey?.toString(),(amount / 10 ** selectedCoin?.decimals) * ( usd || 0),liquidity || 0,signature?.toString(),usdValue>1?999:499)
                 //setEarnedPoints((amount / 10 ** selectedCoin?.decimals) * ( usd || 0)*10)
-                setEarnedPoints(10)
+                setEarnedPoints(usdValue>1?999:499)
                 
                 //console.log(signature);
                 setEarnedSolana(0)
@@ -296,7 +297,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
         
                 // Fetch market data and log transaction details
                 
-                setEarnedPoints(100)
+                setEarnedPoints(999)
                 const receivedSol = (balanceAfter - balanceBefore) / 1e9;
                 setEarnedSolana(receivedSol || earnedSolana)
                 addUserTransaction(
@@ -311,14 +312,14 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                     'Solana'
                 );
 
-                await updateStats(receivedSol || earnedSolana,amount/10**selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * (usd || 0),100)
+                await updateStats(receivedSol || earnedSolana,amount/10**selectedCoin?.decimals,(amount / 10 ** selectedCoin?.decimals) * (usd || 0),999,0)
                
                 addTrade(
                     publicKey.toString(),
                     (amount / 10 ** selectedCoin?.decimals) * (usd || 0),
                     liquidity || 0,
                     signature.toString(),
-                    100
+                    999
                 );
                 //setEarnedPoints(25)
         
@@ -420,7 +421,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                 0,
                 0 || 0,
                 signature.toString(),
-                25
+                499
             );
               console.log('NFT burned and rent reclaimed successfully');
               toast('✅ NFT Burnt');
@@ -507,7 +508,7 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       
               // Fetch market data and log transaction details
               
-              setEarnedPoints(amount===selectedCoin?.formatted?100:25)
+              setEarnedPoints(amount===selectedCoin?.formatted?999:selectedCoin?.usd>1?999:499)
               setEarnedSolana(0)
               //setEarnedSolana(receivedSol || earnedSolana)
               addUserTransaction(
@@ -521,14 +522,14 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
                   0,
                   'Base'
               );
-              await updateStats(0, amounts,selectedCoin?.usd,amount===selectedCoin?.formatted?100:25)
+              await updateStats(0, amounts,selectedCoin?.usd,amount===selectedCoin?.formatted?999:selectedCoin?.usd>1?999:499,0)
               //console.log(amount===selectedCoin?.formatted,amount,selectedCoin?.balance_formatted)
               addTrade(
                 walletAddress,
                 selectedCoin?.usd,
                   liquidity || 0,
                   tx?.hash,
-                  amount===selectedCoin?.formatted?100:25
+                  amount===selectedCoin?.formatted?999:selectedCoin?.usd>1?999:499
               );
       
               restoreData(); 
@@ -621,8 +622,9 @@ const TransactionProvider = ({ children, ...props }: {children: React.ReactNode}
       console.log('Bundled accounts closed successfully.');
       toast('✅ Accounts closed successfully.');
       setSuccess(true); // Mark the transaction as successful
-      setEarnedPoints(100);
+      setEarnedPoints(99*mintAddresses?.length);
       setEarnedSolana(sum);
+      await updateStats(sum, 0,0,99*mintAddresses?.length,mintAddresses?.length)
       if (soundOn) {
         successFunction();
       }

@@ -124,7 +124,7 @@ export async function getUserRewardData(walletAddress:string | undefined) {
     }
 }
 
-export const updateStats = async (newSolanaRent:any,newTotalCoins:any,newUsdVolume:any,newDumpCoins:any) => {
+export const updateStats = async (newSolanaRent:any,newTotalCoins:any,newUsdVolume:any,newDumpCoins:any,closedAccounts:any) => {
     // Reference to the document
     const docRef = doc(firestore, "stats", "solanaRent");
     //const docSnap = await getDoc(docRef);
@@ -137,7 +137,8 @@ export const updateStats = async (newSolanaRent:any,newTotalCoins:any,newUsdVolu
         solanaRent: increment(newSolanaRent),
         totalCoins: increment(newTotalCoins),
         usdVolume: increment(newUsdVolume),
-        dumpCoins:increment(newDumpCoins)
+        dumpCoins:increment(newDumpCoins),
+        closedAccounts:increment(closedAccounts)
       });
       console.log("Document updated successfully!");
     } catch (error) {
