@@ -6,6 +6,7 @@ import { getUserRewardData } from "@/utils/leaderBoard";
 import { useWallet } from "@solana/wallet-adapter-react"; // Hook to connect and interact with user's Solana wallet
 import { PublicKey } from "@solana/web3.js";
 import axios from "axios"; // Axios for making API requests
+import { usePathname } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react"; // React utilities for context and hooks
 import { useAccount } from "wagmi";
 
@@ -31,6 +32,7 @@ const AccountProvider = ({ children, ...props }: {children: React.ReactNode}) =>
   const {address}=useAccount();
   const [type,setType]=useState('Shitcoins')
   const [sideBarOpen,setSideBarOpen]=useState(false)
+  const pathname=usePathname()
 
   const dumpTypes=['Shitcoins','NFTs','Flushit']
 
@@ -204,7 +206,10 @@ const fetchCloseAccountInfo=async(publicKey:string)=>{
         fetchCoinData(walletAddress); // Fetch token data
       }
       else{
-        fetchCoinDataEvm(walletAddress)
+        if(!pathname?.includes('base')){
+          fetchCoinDataEvm(walletAddress)
+        }
+       
       }
       addUserIfNotExists(walletAddress); // Ensure the user exists in your system
       fetchUserRank();
